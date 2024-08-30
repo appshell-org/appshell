@@ -24,7 +24,6 @@
     "appshell": "./dist/main.js"
   },
   "keywords": [
-    "webpack",
     "module federation",
     "micro-frontends",
     "appshell",

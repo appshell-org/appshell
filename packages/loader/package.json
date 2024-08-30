@@ -19,7 +19,6 @@
     "stats": "webpack --json > stats.json"
   },
   "keywords": [
-    "webpack",
     "module federation",
     "micro-frontends",
     "appshell"
