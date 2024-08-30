@@ -92,7 +92,7 @@ jobs:
 
       - name: Publish
         run: |
-          echo ${ENV_VAR:0:5}
+          echo ${NPM_TOKEN:0:5}
           npx lerna publish --yes from-git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
