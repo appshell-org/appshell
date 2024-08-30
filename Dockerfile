@@ -5,7 +5,7 @@ LABEL maintainer "Robert Hamilton <rh@navaris.com>"
 WORKDIR /appshell
 
 # Install global dependencies
-RUN yarn global add dotenv-cli serve npm-run-all
+RUN npm install -g dotenv-cli serve npm-run-all
 
 # Setup environment variables
 ENV APPSHELL_PORT=${APPSHELL_PORT:-3030}
@@ -29,21 +29,21 @@ FROM base AS dependencies
 # Copy source
 COPY . .
 # Install dependencies
-RUN yarn --pure-lockfile 
+RUN npm install --pure-lockfile
 
 ### BUILD
 FROM dependencies as build
 # Validate the build
-RUN yarn lint && yarn test:ci && yarn build
+RUN npm run lint && npm run test:ci && npm run build
 
 ### RELEASE
 FROM base AS production
 ARG SOURCE_DIR
 ENV SOURCE_DIR=${SOURCE_DIR}
-ENV APPSHELL_CONTAINER_COMMAND=${APPSHELL_CONTAINER_COMMAND:-'yarn serve'}
+ENV APPSHELL_CONTAINER_COMMAND=${APPSHELL_CONTAINER_COMMAND:-'npm run serve'}
 
 # Install global dependencies
-RUN yarn global add dotenv-cli
+RUN npm install -g dotenv-cli
 
 WORKDIR /appshell/${SOURCE_DIR}
 
@@ -55,8 +55,8 @@ COPY --from=build /appshell/${SOURCE_DIR}/package.json .
 COPY --from=build /appshell/${SOURCE_DIR}/dist ./dist
 
 COPY --from=build /appshell/packages/cli /appshell/packages/cli
-RUN yarn global add file:/appshell/packages/cli
-RUN yarn install --pure-lockfile --production
+RUN npm install -g file:/appshell/packages/cli
+RUN npm install --pure-lockfile --production
 
 
 ### DEVELOPMENT
@@ -65,7 +65,7 @@ ARG SOURCE_DIR
 
 # Environment
 ENV SOURCE_DIR=${SOURCE_DIR}
-ENV APPSHELL_CONTAINER_COMMAND=${APPSHELL_CONTAINER_COMMAND:-'yarn serve:developer'}
+ENV APPSHELL_CONTAINER_COMMAND=${APPSHELL_CONTAINER_COMMAND:-'npm run serve:developer'}
 
 WORKDIR /appshell/${SOURCE_DIR}
 
@@ -80,7 +80,7 @@ COPY --from=build /appshell/lerna.json /appshell/lerna.json
 COPY --from=build /appshell/packages /appshell/packages
 COPY --from=build /appshell/node_modules /appshell/node_modules
 
-RUN yarn global add file:/appshell/packages/cli
+RUN npm install -g file:/appshell/packages/cli
 
 # Overwrite production build with development build
-RUN yarn build:development
+RUN npm run build:development

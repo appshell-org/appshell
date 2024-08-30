@@ -1,7 +1,7 @@
 {
   "useWorkspaces": true,
   "version": "independent",
-  "npmClient": "yarn",
+  "npmClient": "npm",
   "command": {
     "version": {
       "conventionalCommits": true,
