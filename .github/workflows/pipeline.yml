@@ -91,7 +91,9 @@ jobs:
         run: npm run build
 
       - name: Publish
-        run: npx lerna publish --yes from-git
+        run: |
+          echo ${ENV_VAR:0:5}
+          npx lerna publish --yes from-git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
