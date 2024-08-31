@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1-alpha.0](https://github.com/navaris/appshell/compare/@appshell/react@0.3.0...@appshell/react@0.3.1-alpha.0) (2024-08-31)
+
+
+### Bug Fixes
+
+* bump pipeline ([8bb63bc](https://github.com/navaris/appshell/commit/8bb63bcae1928c01bb6bc853d88010939e686af5))
+
+
+
+
+
 # [0.3.0](https://github.com/navaris/appshell/compare/@appshell/react@0.2.2...@appshell/react@0.3.0) (2024-01-25)
 
 

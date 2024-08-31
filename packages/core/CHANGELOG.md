@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1-alpha.0](https://github.com/navaris/appshell/compare/@appshell/core@0.2.0...@appshell/core@0.2.1-alpha.0) (2024-08-31)
+
+
+### Bug Fixes
+
+* bump pipeline ([8bb63bc](https://github.com/navaris/appshell/commit/8bb63bcae1928c01bb6bc853d88010939e686af5))
+
+
+
+
+
 # [0.2.0](https://github.com/navaris/appshell/compare/@appshell/core@0.2.0-alpha.0...@appshell/core@0.2.0) (2023-08-28)
 
 **Note:** Version bump only for package @appshell/core

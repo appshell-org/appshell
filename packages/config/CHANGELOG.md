@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/config@0.5.5...@appshell/config@0.6.0-alpha.0) (2024-08-31)
+
+
+### Bug Fixes
+
+* bump pipeline ([8bb63bc](https://github.com/navaris/appshell/commit/8bb63bcae1928c01bb6bc853d88010939e686af5))
+
+
+### Features
+
+* AppshellComponent impl ([2b82621](https://github.com/navaris/appshell/commit/2b82621c13302f790a8e1c457f9a82f39903fc1f))
+
+
+
+
+
 ## [0.5.5](https://github.com/navaris/appshell/compare/@appshell/config@0.5.4...@appshell/config@0.5.5) (2023-08-29)
 
 
