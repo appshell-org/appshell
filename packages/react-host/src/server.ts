@@ -16,11 +16,12 @@ if (isDevelopment) {
   const webpackConfig = require('../webpack.config');
 
   const config = webpackConfig(null, { mode: process.env.NODE_ENV });
+  console.log('config', config);
   const compiler = webpack(config);
 
   app.use(
     webpackDevMiddleware(compiler, {
-      publicPath: config.output.publicPath,
+      publicPath: 'auto',
     }),
   );
 
@@ -33,6 +34,10 @@ app.use(express.static(__dirname));
 app.engine('.html', ejs.renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
+
+app.get('/api-key', (req, res) => {
+  res.json({ apiKey: process.env.APPSHELL_API_KEY });
+});
 
 app.get('*', (req, res) => {
   res.render('index', {
