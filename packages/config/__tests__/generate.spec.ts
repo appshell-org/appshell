@@ -64,6 +64,7 @@ describe('generate', () => {
     });
 
     it('should produce null when config is available to process', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const config = await generate(undefined as any);
 
       expect(config).toBeNull();

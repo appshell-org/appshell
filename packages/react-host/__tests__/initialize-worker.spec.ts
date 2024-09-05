@@ -172,6 +172,7 @@ describe('initialize-worker', () => {
         .spyOn(initModule, 'fetchApiKey')
         .mockResolvedValue('test-api-key');
       const registerSpy = jest.spyOn(navigator.serviceWorker, 'register');
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const postMessageSpy = jest.spyOn(navigator.serviceWorker.controller!, 'postMessage');
 
       await initializeAppshellServiceWorker();

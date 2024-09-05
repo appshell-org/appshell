@@ -56,6 +56,7 @@ describe('service-worker', () => {
       .mockImplementationOnce(() => Promise.resolve(mockDeep<Response>()));
 
     const ev = mockDeep<FetchEvent>({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       request: 'https://example.com' as any,
       respondWith: jest.fn(),
     });
