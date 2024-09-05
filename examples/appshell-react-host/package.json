@@ -20,7 +20,7 @@
     "start": "dotenv -- lerna run --parallel start",
     "stats": "lerna run --parallel stats",
     "test": "jest",
-    "test:ci": "yarn test a --watchAll=false"
+    "test:ci": "npm run test -- a --watchAll=false"
   },
   "dependencies": {
     "@appshell/core": "0.2.0",

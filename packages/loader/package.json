@@ -11,11 +11,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "webpack --mode production && yarn build:types",
+    "build": "webpack --mode production && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "start": "webpack --watch --mode development && yarn build:types",
+    "start": "webpack --watch --mode development && npm run build:types",
     "stats": "webpack --json > stats.json"
   },
   "keywords": [

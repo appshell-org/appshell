@@ -77,6 +77,10 @@ APPSHELL_TITLE=My App
 APPSHELL_DESCRIPTION=Appshell React host
 # Custom URL for global stylesheet
 APPSHELL_STYLESHEET_URL=https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap
+# Used during development to access base registry that has api key authentication enabled
+APPSHELL_API_KEY=XXX-API-KEY-FOR-BASE-REGISTRY
+# Url of Appshell service worker script
+APPSHELL_SERVICE_WORKER_URL=/appshell-service-worker.js
 
 APPSHELL_CONTAINER_SCALE=1
 ENV_TARGET=
