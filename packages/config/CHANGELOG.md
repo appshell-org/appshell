@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.1](https://github.com/navaris/appshell/compare/@appshell/config@0.6.0-alpha.0...@appshell/config@0.6.0-alpha.1) (2024-09-05)
+
+
+### Features
+
+* api key support ([8c91e62](https://github.com/navaris/appshell/commit/8c91e6240b3d879af9bdd5949924865da0e0f8a1))
+
+
+
+
+
 # [0.6.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/config@0.5.5...@appshell/config@0.6.0-alpha.0) (2024-08-31)
 
 
