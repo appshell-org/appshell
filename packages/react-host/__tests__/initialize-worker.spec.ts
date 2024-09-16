@@ -40,7 +40,7 @@ describe('initialize-worker', () => {
   describe('unregisterAppshellServiceWorker', () => {
     it('should log a message if no Appshell Service Worker is found', async () => {
       const { unregisterAppshellServiceWorker } = require('../src/worker/initialize');
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'debug');
       jest.spyOn(navigator.serviceWorker, 'getRegistrations').mockResolvedValue([]);
 
       await unregisterAppshellServiceWorker('worker.js');
@@ -57,7 +57,7 @@ describe('initialize-worker', () => {
         unregister: jest.fn().mockResolvedValue(true),
       };
       navigator.serviceWorker.getRegistrations = jest.fn().mockResolvedValue([mockRegistration]);
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'debug');
 
       await unregisterAppshellServiceWorker('worker.js');
 
@@ -76,7 +76,7 @@ describe('initialize-worker', () => {
         unregister: jest.fn().mockResolvedValue(false),
       };
       navigator.serviceWorker.getRegistrations = jest.fn().mockResolvedValue([mockRegistration]);
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'debug');
 
       await unregisterAppshellServiceWorker('worker.js');
 
@@ -128,7 +128,7 @@ describe('initialize-worker', () => {
     it('should log a message if Appshell Service Worker URL is not configured', async () => {
       const initModule = require('../src/worker/initialize');
       const { initializeAppshellServiceWorker } = initModule;
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'debug');
       const unregisterAppshellServiceWorkerSpy = jest.spyOn(
         initModule,
         'unregisterAppshellServiceWorker',
@@ -151,7 +151,7 @@ describe('initialize-worker', () => {
     it('should log a message if Appshell API key is not configured and unregister the worker', async () => {
       const initModule = require('../src/worker/initialize');
       const { initializeAppshellServiceWorker } = initModule;
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'debug');
       const unregisterAppshellServiceWorkerSpy = jest
         .spyOn(initModule, 'unregisterAppshellServiceWorker')
         .mockResolvedValue(undefined);
@@ -167,7 +167,7 @@ describe('initialize-worker', () => {
     it('should register the Appshell Service Worker and send the API key', async () => {
       const initModule = require('../src/worker/initialize');
       const { initializeAppshellServiceWorker } = initModule;
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'debug');
       const fetchApiKeySpy = jest
         .spyOn(initModule, 'fetchApiKey')
         .mockResolvedValue('test-api-key');

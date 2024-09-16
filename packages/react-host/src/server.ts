@@ -16,7 +16,6 @@ if (isDevelopment) {
   const webpackConfig = require('../webpack.config');
 
   const config = webpackConfig(null, { mode: process.env.NODE_ENV });
-  console.log('config', config);
   const compiler = webpack(config);
 
   app.use(

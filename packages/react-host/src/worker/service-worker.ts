@@ -1,9 +1,12 @@
+/* eslint-disable no-console */
+import { headersToObject, isExternalDomain } from './util';
+
 export type {};
 declare const self: ServiceWorkerGlobalScope & { apiKey: string };
 
-export const handleInstallEvent = () => {
+export const handleInstallEvent = (event: InstallEvent) => {
   console.debug('Service Worker installing.');
-  self.skipWaiting();
+  event.waitUntil(self.skipWaiting());
 };
 
 export const handleActivateEvent = () => {
@@ -24,13 +27,29 @@ export const handleMessageEvent = (event: ExtendableMessageEvent) => {
 };
 
 export const handleFetchEvent = (event: FetchEvent) => {
-  event.respondWith(
-    fetch(event.request, {
-      headers: { 'X-API-KEY': self.apiKey },
-      mode: 'cors',
-      credentials: 'same-origin',
-    }) as Promise<Response>,
-  );
+  const requestUrl = event.request.url;
+
+  // eslint-disable-next-line no-restricted-globals
+  if (!isExternalDomain(requestUrl, location.origin)) {
+    event.respondWith(
+      fetch(
+        new Request(event.request, {
+          mode: 'cors',
+          credentials: 'same-origin',
+          headers: new Headers({
+            ...headersToObject(event.request.headers),
+            'X-API-KEY': self.apiKey,
+          }),
+        }),
+      )
+        .then((response) => response)
+        .catch((error) => {
+          console.warn('Failed to fetch resource:', requestUrl);
+          console.error(error);
+          return new Response('An error occurred', { status: 500 });
+        }) as Promise<Response>,
+    );
+  }
 };
 
 self.addEventListener('install', handleInstallEvent);

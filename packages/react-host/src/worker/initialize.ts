@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { APPSHELL_ENV } from '@appshell/core';
 
 export const unregisterAppshellServiceWorker = async (workerUrl: string) => {
@@ -8,13 +9,13 @@ export const unregisterAppshellServiceWorker = async (workerUrl: string) => {
   );
 
   if (!worker) {
-    console.log('No Appshell Service Worker found');
+    console.debug('No Appshell Service Worker found');
     return;
   }
 
-  console.log(`Unregistering worker ${workerUrl}`);
+  console.debug(`Unregistering worker ${workerUrl}`);
   const isUnregistered = await worker.unregister();
-  console.log(
+  console.debug(
     `Appshell Service Worker ${
       isUnregistered ? 'successfullly unregistered' : 'failed to unregister'
     }`,
@@ -36,7 +37,7 @@ export const initializeAppshellServiceWorker = async () => {
   const workerUrl = APPSHELL_ENV.APPSHELL_SERVICE_WORKER_URL;
 
   if (!workerUrl) {
-    console.log(
+    console.debug(
       'Appshell Service Worker URL not configured. To enable, configure APPSHELL_SERVICE_WORKER_URL in your environment.',
     );
     return;
@@ -46,16 +47,16 @@ export const initializeAppshellServiceWorker = async () => {
     const apiKey = await fetchApiKey();
 
     if (!apiKey) {
-      console.log('Appshell API key not configured.');
+      console.debug('Appshell API key not configured.');
 
       await unregisterAppshellServiceWorker(workerUrl);
       return;
     }
 
-    console.log(`Registering Appshell Service Worker ${workerUrl}`);
+    console.debug(`Registering Appshell Service Worker ${workerUrl}`);
     await navigator.serviceWorker.register(workerUrl);
 
-    console.log('Appshell Service Worker Registered');
+    console.debug('Appshell Service Worker Registered');
     navigator.serviceWorker.controller?.postMessage({
       type: 'apiKey',
       apiKey,
