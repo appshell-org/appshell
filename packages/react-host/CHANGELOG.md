@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.4.2...@appshell/react-host@0.5.0) (2024-09-24)
+
+
+### Features
+
+* api key support ([9cdcbee](https://github.com/appshell-org/appshell/commit/9cdcbee36e44b8a179b49768d74a25767f1cc5f2))
+
+
+
+
+
 # [0.5.0-alpha.1](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.5.0-alpha.0...@appshell/react-host@0.5.0-alpha.1) (2024-09-17)
 
 

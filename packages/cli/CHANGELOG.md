@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/navaris/appshell/compare/@appshell/cli@0.5.7...@appshell/cli@0.6.0) (2024-09-24)
+
+
+### Features
+
+* api key support ([9cdcbee](https://github.com/navaris/appshell/commit/9cdcbee36e44b8a179b49768d74a25767f1cc5f2))
+* AppshellComponent impl ([2b82621](https://github.com/navaris/appshell/commit/2b82621c13302f790a8e1c457f9a82f39903fc1f))
+
+
+
+
+
 # [0.6.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/cli@0.5.7...@appshell/cli@0.6.0-alpha.0) (2024-08-31)
 
 

@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/navaris/appshell/compare/@appshell/manifest-webpack-plugin@0.3.4...@appshell/manifest-webpack-plugin@0.4.0) (2024-09-24)
+
+
+### Bug Fixes
+
+* appshell host runtime configuration ([#32](https://github.com/navaris/appshell/issues/32)) ([cd63ad0](https://github.com/navaris/appshell/commit/cd63ad0f031ede2fd9153707d418261238b382b2))
+
+
+### Features
+
+* api key support ([9cdcbee](https://github.com/navaris/appshell/commit/9cdcbee36e44b8a179b49768d74a25767f1cc5f2))
+* AppshellComponent impl ([2b82621](https://github.com/navaris/appshell/commit/2b82621c13302f790a8e1c457f9a82f39903fc1f))
+
+
+
+
+
 # [0.4.0-alpha.1](https://github.com/navaris/appshell/compare/@appshell/manifest-webpack-plugin@0.4.0-alpha.0...@appshell/manifest-webpack-plugin@0.4.0-alpha.1) (2024-09-05)
 
 
