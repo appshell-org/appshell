@@ -1,16 +1,12 @@
 {
   "useWorkspaces": true,
   "version": "independent",
-  "npmClient": "yarn",
+  "npmClient": "npm",
   "command": {
     "version": {
       "conventionalCommits": true,
       "message": "chore: release [skip ci] %s"
     }
   },
-  "ignoreChanges": [
-    "**/__fixtures__/**",
-    "**/__tests__/**",
-    "**/*.md"
-  ]
+  "ignoreChanges": ["**/__fixtures__/**", "**/__tests__/**", "**/*.md"]
 }

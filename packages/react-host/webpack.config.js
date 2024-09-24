@@ -10,7 +10,7 @@ const appshellReactPkg = require('../react/package.json');
 module.exports = (env, { mode }) => {
   const isDevelopment = mode === 'development';
 
-  return {
+  const browser = {
     entry: isDevelopment
       ? [
           'webpack-hot-middleware/client', // HMR entry point
@@ -102,4 +102,39 @@ module.exports = (env, { mode }) => {
       isDevelopment && new ReactRefreshSingleton(),
     ].filter(Boolean),
   };
+
+  const worker = {
+    entry: {
+      'appshell-service-worker': './src/worker/service-worker',
+    },
+    mode,
+    target: 'webworker',
+    devtool: isDevelopment ? 'eval-source-map' : false,
+    output: {
+      publicPath: 'auto',
+      uniqueName: `appshell-service-worker`,
+    },
+    resolve: {
+      extensions: ['.js', '.ts', '.tsx'],
+      plugins: [new TsconfigPathsPlugin({ configFile: 'tsconfig.worker.json' })],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-typescript'],
+              },
+            },
+          ],
+        },
+      ],
+    },
+  };
+
+  return [browser, worker];
 };

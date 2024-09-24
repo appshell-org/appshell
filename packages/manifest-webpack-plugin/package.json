@@ -1,6 +1,6 @@
 {
   "name": "@appshell/manifest-webpack-plugin",
-  "version": "0.3.4",
+  "version": "0.4.0-alpha.1",
   "description": "Webpack plugin used to generate a global Appshell configuration for micro-frontends built with Module Federation",
   "main": "dist/main.js",
   "types": "dist/types/manifest-webpack-plugin/src/index.d.ts",
@@ -11,7 +11,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "webpack --mode production && yarn build:types",
+    "build": "webpack --mode production && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
     "build:code": "cross-env NODE_ENV=production babel-typescript src -d dist --copy-files",
     "clean": "rm -rf dist",
@@ -23,7 +23,6 @@
     "dist"
   ],
   "keywords": [
-    "webpack",
     "module federation",
     "micro-frontends",
     "appshell",

@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0-alpha.1](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.5.0-alpha.0...@appshell/react-host@0.5.0-alpha.1) (2024-09-17)
+
+
+### Bug Fixes
+
+* exclude application of api key to external urls ([87d4abe](https://github.com/appshell-org/appshell/commit/87d4abe0e486e97b756bdf0def1e77150e230e33))
+
+
+
+
+
+# [0.5.0-alpha.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.4.3-alpha.0...@appshell/react-host@0.5.0-alpha.0) (2024-09-05)
+
+
+### Features
+
+* api key support ([8c91e62](https://github.com/appshell-org/appshell/commit/8c91e6240b3d879af9bdd5949924865da0e0f8a1))
+
+
+
+
+
+## [0.4.3-alpha.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.4.2...@appshell/react-host@0.4.3-alpha.0) (2024-08-31)
+
+
+### Bug Fixes
+
+* bump pipeline ([8bb63bc](https://github.com/appshell-org/appshell/commit/8bb63bcae1928c01bb6bc853d88010939e686af5))
+
+
+
+
+
 ## [0.4.2](https://github.com/navaris/appshell/compare/@appshell/react-host@0.4.1...@appshell/react-host@0.4.2) (2024-01-31)
 
 

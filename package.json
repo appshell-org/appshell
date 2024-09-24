@@ -14,7 +14,7 @@
     "start": "dotenv -- lerna run --parallel start",
     "stats": "lerna run --parallel stats",
     "test": "jest",
-    "test:ci": "yarn test a --silent --watchAll=false --coverage --reporters=jest-junit"
+    "test:ci": "npm test a --silent --watchAll=false --coverage --reporters=jest-junit"
   },
   "dependencies": {
     "@automapper/core": "8.7.7",
@@ -73,8 +73,10 @@
     "jest-environment-jsdom": "29.5.0",
     "jest-fetch-mock": "3.0.3",
     "jest-junit": "15.0.0",
+    "jest-mock-extended": "^3.0.7",
     "json-schema-to-typescript": "12.0.0",
     "lerna": "^4.0.0",
+    "node-mocks-http": "^1.16.0",
     "nodemon": "2.0.22",
     "postcss": "8.4.21",
     "postcss-loader": "7.0.2",

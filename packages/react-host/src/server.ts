@@ -20,7 +20,7 @@ if (isDevelopment) {
 
   app.use(
     webpackDevMiddleware(compiler, {
-      publicPath: config.output.publicPath,
+      publicPath: 'auto',
     }),
   );
 
@@ -33,6 +33,10 @@ app.use(express.static(__dirname));
 app.engine('.html', ejs.renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
+
+app.get('/api-key', (req, res) => {
+  res.json({ apiKey: process.env.APPSHELL_API_KEY });
+});
 
 app.get('*', (req, res) => {
   res.render('index', {

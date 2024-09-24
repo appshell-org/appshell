@@ -30,6 +30,7 @@ export default async (url: string) => {
         const message = `Failed to fetch remote entry from '${url}'.`;
         // eslint-disable-next-line no-console
         console.error(message);
+        urlCache.delete(url);
         reject(message);
       };
 

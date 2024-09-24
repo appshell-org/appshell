@@ -5,27 +5,26 @@ LABEL maintainer "Robert Hamilton <rh@navaris.com>"
 # Set the working directory
 WORKDIR /appshell
 
-# Install global dependencies
-# RUN yarn global add dotenv-cli serve npm-run-all
-
 ### DEPENDENCIES
 FROM base AS dependencies
 RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
+
 # Copy source
 COPY . .
+
 # Install dependencies
-RUN yarn --pure-lockfile && yarn bootstrap
+RUN npm install --pure-lockfile && npm run bootstrap
 
 ### BUILD
 FROM dependencies as build
-RUN yarn build
+RUN npm run build
 
 ### DEVELOPMENT
 FROM build AS development
 
 # Environment
 ENV APPSHELL_REGISTRY=${APPSHELL_REGISTRY:-'/appshell/appshell_registry'}
-ENV CONTAINER_COMMAND=${CONTAINER_COMMAND:-'yarn serve'}
+ENV CONTAINER_COMMAND=${CONTAINER_COMMAND:-'npm run serve'}
 
 ENV SAMPLE_MFE_CONTAINER_PORT=${SAMPLE_MFE_CONTAINER_PORT:-3000}
 ENV SAMPLE_MFE_PING_PORT=${SAMPLE_MFE_PING_PORT:-3001}

@@ -1,6 +1,6 @@
 {
   "name": "@appshell/config",
-  "version": "0.5.5",
+  "version": "0.6.0-alpha.1",
   "description": "Utility for producing a global appshell manifest for module federation micro-frontends",
   "main": "dist/main.js",
   "types": "dist/types/index.d.ts",
@@ -11,17 +11,16 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "webpack --mode production && yarn build:types",
+    "build": "webpack --mode production && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
     "clean": "rm -rf dist",
-    "start": "webpack --watch --mode development && yarn build:types",
+    "start": "webpack --watch --mode development && npm run build:types",
     "stats": "webpack --json > stats.json"
   },
   "files": [
     "dist"
   ],
   "keywords": [
-    "webpack",
     "module federation",
     "micro-frontends",
     "appshell"

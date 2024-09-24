@@ -1,6 +1,6 @@
 {
   "name": "@appshell/loader",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha.0",
   "description": "Utility for loading Appshell components",
   "main": "dist/main.js",
   "types": "dist/loader/src/index.d.ts",
@@ -11,15 +11,14 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "webpack --mode production && yarn build:types",
+    "build": "webpack --mode production && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "start": "webpack --watch --mode development && yarn build:types",
+    "start": "webpack --watch --mode development && npm run build:types",
     "stats": "webpack --json > stats.json"
   },
   "keywords": [
-    "webpack",
     "module federation",
     "micro-frontends",
     "appshell"

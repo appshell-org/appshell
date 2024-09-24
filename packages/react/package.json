@@ -1,6 +1,6 @@
 {
   "name": "@appshell/react",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha.0",
   "description": "React utilities for building micro-frontends with Appshell and Module Federation",
   "main": "dist/main.js",
   "types": "dist/types/react/src/index.d.ts",
@@ -11,14 +11,13 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "webpack --mode production && yarn build:types",
+    "build": "webpack --mode production && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
     "clean": "rm -rf dist",
     "start": "webpack --watch --mode development --stats-error-details",
     "stats": "webpack --json > stats.json"
   },
   "keywords": [
-    "webpack",
     "module federation",
     "micro-frontends",
     "appshell"

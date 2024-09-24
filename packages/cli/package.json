@@ -1,6 +1,6 @@
 {
   "name": "@appshell/cli",
-  "version": "0.5.7",
+  "version": "0.6.0-alpha.0",
   "description": "cli utility to generate a global appshell artifacts for module federation micro-frontends",
   "main": "dist/main.js",
   "repository": "https://github.com/navaris/appshell.git",
@@ -24,7 +24,6 @@
     "appshell": "./dist/main.js"
   },
   "keywords": [
-    "webpack",
     "module federation",
     "micro-frontends",
     "appshell",
