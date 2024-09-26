@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/navaris/appshell/compare/@appshell/config@0.6.0...@appshell/config@0.7.0) (2024-09-26)
+
+
+### Bug Fixes
+
+* detect shared dependency conflicts ([c290107](https://github.com/navaris/appshell/commit/c290107b4f7be93bf0b915371891db8b88f84678))
+
+
+### Features
+
+* detect shared dependency conflicts  ([2894b15](https://github.com/navaris/appshell/commit/2894b158262ba6e474853b7db086625cd7ecdda7))
+
+
+
+
+
 # [0.7.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/config@0.6.0...@appshell/config@0.7.0-alpha.0) (2024-09-26)
 
 
