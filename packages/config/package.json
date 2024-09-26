@@ -21,6 +21,7 @@
     "dist"
   ],
   "keywords": [
+    "webpack",
     "module federation",
     "micro-frontends",
     "appshell"
