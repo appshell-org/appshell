@@ -23,9 +23,6 @@
   "bin": {
     "appshell": "./dist/main.js"
   },
-  "dependencies": {
-    "@appshell/config": "^0.7.0"
-  },
   "keywords": [
     "module federation",
     "micro-frontends",
