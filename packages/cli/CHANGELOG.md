@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/navaris/appshell/compare/@appshell/cli@0.6.0...@appshell/cli@0.6.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* publish cli ([0ed6a10](https://github.com/navaris/appshell/commit/0ed6a10a4ed38456272d9f483acfcca8ba818981))
+
+
+
+
+
 # [0.6.0](https://github.com/navaris/appshell/compare/@appshell/cli@0.5.7...@appshell/cli@0.6.0) (2024-09-24)
 
 
