@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/navaris/appshell/compare/@appshell/cli@0.6.1...@appshell/cli@0.6.2) (2024-09-26)
+
+
+### Bug Fixes
+
+* update lock file ([36f8d95](https://github.com/navaris/appshell/commit/36f8d95d844a31a175e4dfb84c3d814294228ef7))
+
+
+
+
+
 ## [0.6.1](https://github.com/navaris/appshell/compare/@appshell/cli@0.6.0...@appshell/cli@0.6.1) (2024-09-26)
 
 
