@@ -74,12 +74,12 @@ describe('validators', () => {
 
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package package1: 0.1.0',
+            '\u2714 Shared dependency package1@0.1.0 satisfied in module TestModule. Module TestModule expects package1@0.1.0',
           ),
         );
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package package2: 1.1.0',
+            '\u2714 Shared dependency package2@1.1.0 satisfied in module TestModule. Module TestModule expects package2@1.1.0',
           ),
         );
       });
@@ -97,12 +97,12 @@ describe('validators', () => {
 
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package package1: 0.1.0',
+            '\u2714 Shared dependency package1@0.1.0 satisfied in module TestModule. Module TestModule expects package1@0.1.0',
           ),
         );
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package package2: 1.1.0',
+            '\u2714 Shared dependency package2@1.1.0 satisfied in module TestModule. Module TestModule expects package2@1.1.0',
           ),
         );
       });
@@ -124,12 +124,12 @@ describe('validators', () => {
 
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package package1: 0.1.0',
+            '\u2714 Shared dependency package1@0.1.0 satisfied in module TestModule. Module TestModule expects package1@0.1.0',
           ),
         );
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package package2: ^1.0.0',
+            '\u2714 Shared dependency package2@1.1.0 satisfied in module TestModule. Module TestModule expects package2@^1.0.0',
           ),
         );
       });
@@ -150,8 +150,8 @@ describe('validators', () => {
         AppshellManifestValidator.validate<AnyConfig>(validManifest, incomingManifest);
 
         expect(consoleSpy).toHaveBeenCalledWith(
-          chalk.magenta(
-            'Shared dependency version conflict in MFE module TestModule for package package2: 2.0.0 does not satisfy ^1.0.0',
+          chalk.red(
+            '\u2717 Shared dependency package2@2.0.0 conflicts in module TestModule. Module TestModule expects package2@^1.0.0',
           ),
         );
       });
@@ -172,8 +172,8 @@ describe('validators', () => {
         AppshellManifestValidator.validate<AnyConfig>(validManifest, incomingManifest);
 
         expect(consoleSpy).toHaveBeenCalledWith(
-          chalk.magenta(
-            'Shared dependency version missing in MFE module TestModule for package package2: undefined',
+          chalk.yellow(
+            '\u26A0 Shared dependency package2@^1.0.0 missing in module TestModule. Module TestModule expects package2@^1.0.0',
           ),
         );
       });
@@ -211,27 +211,27 @@ describe('validators', () => {
 
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package react: 18.2.0',
+            '\u2714 Shared dependency react@18.2.0 satisfied in module TestModule. Module TestModule expects react@18.2.0',
           ),
         );
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package react-dom: 18.2.0',
+            '\u2714 Shared dependency react-dom@18.2.0 satisfied in module TestModule. Module TestModule expects react-dom@18.2.0',
           ),
         );
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package react-refresh: ^0.14.0',
+            '\u2714 Shared dependency react-refresh@^0.14.0 satisfied in module TestModule. Module TestModule expects react-refresh@^0.14.0',
           ),
         );
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package styled-components: 6.0.0-rc.3',
+            '\u2714 Shared dependency styled-components@6.0.0-rc.3 satisfied in module TestModule. Module TestModule expects styled-components@6.0.0-rc.3',
           ),
         );
         expect(consoleSpy).toHaveBeenCalledWith(
           chalk.green(
-            'Shared dependency version matched in MFE module TestModule for package @appshell/react: ^0.3.0',
+            '\u2714 Shared dependency @appshell/react@^0.3.0 satisfied in module TestModule. Module TestModule expects @appshell/react@^0.3.0',
           ),
         );
       });

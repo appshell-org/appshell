@@ -8,6 +8,43 @@ export type ConfigValidator = {
 
 export type ConfigMap = Record<string, string>;
 
+export type PackageSpec = {
+  name: string;
+  version: string;
+  description?: string;
+  main: string;
+  scripts?: { [key: string]: string };
+  keywords?: string[];
+  author?: string;
+  license?: string;
+  dependencies?: { [key: string]: string };
+  devDependencies?: { [key: string]: string };
+};
+
+export type SharedModuleSpec = {
+  name: string;
+  shared: SharedObject;
+};
+
+export type ComparisonResult = {
+  packageName: string;
+  sampleModule: string;
+  sampleVersion: string;
+  baselineModule: string;
+  baselineVersion: string;
+};
+
+export type ComparisonResults = {
+  conflicts: Record<string, ComparisonResult>;
+  missing: Record<string, ComparisonResult>;
+  satisfied: Record<string, ComparisonResult>;
+};
+
+export type ComparisonTarget = {
+  name: string;
+  dependencies: Record<string, string>;
+};
+
 /* appshell.config.yaml types */
 export type AppshellConfigRemote<TMetadata = Metadata> = {
   id: string;

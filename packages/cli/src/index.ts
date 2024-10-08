@@ -12,6 +12,7 @@ import generateGlobalConfigHandler, {
   GenerateGlobalConfigArgs,
 } from './handlers/generate.global-config';
 import generateManifestHandler, { GenerateManifestArgs } from './handlers/generate.manifest';
+import outdatedHandler, { OutdatedArgs } from './handlers/outdated';
 import registerManifestHandler, { RegisterManifestArgs } from './handlers/register';
 import startHandler, { StartArgs } from './handlers/start';
 
@@ -264,6 +265,48 @@ const generateEnvCommand: yargs.CommandModule<unknown, GenerateEnvArgs> = {
   handler: generateEnvHandler,
 };
 
+const outdatedCommand: yargs.CommandModule<unknown, OutdatedArgs> = {
+  command: 'outdated',
+  aliases: ['o'],
+  describe: 'Analyzes shared dependencies for outdated versions',
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  builder: (yargs) =>
+    yargs
+      .option('workingDir', {
+        alias: 'd',
+        string: true,
+        default: '.',
+        description: 'Working directory to analyze shared dependencies',
+      })
+      .option('registry', {
+        alias: 'r',
+        default: 'appshell_registry',
+        type: 'string',
+        description: 'Registry path or url for the appshell manifests',
+      })
+      .option('manager', {
+        alias: 'm',
+        default: 'npm',
+        type: 'string',
+        choices: ['npm', 'yarn'],
+        description: 'Package manager to use for dependency resolution',
+      })
+      .option('verbose', {
+        alias: 'v',
+        boolean: true,
+        default: false,
+        type: 'boolean',
+        description: 'Verbose output',
+      })
+      .middleware((argv) => {
+        if (!argv.verbose) {
+          // eslint-disable-next-line no-console
+          console.debug = () => {};
+        }
+      }),
+  handler: outdatedHandler,
+};
+
 yargs(hideBin(process.argv))
   .command({
     command: 'generate [target]',
@@ -277,6 +320,7 @@ yargs(hideBin(process.argv))
         .command(generateGlobalConfigCommand)
         .demandCommand(),
   })
+  .command(outdatedCommand)
   .command(registerManifestCommand)
   .command(deregisterManifestCommand)
   .command(startCommand)

@@ -14,7 +14,7 @@
     "start": "dotenv -- lerna run --parallel start",
     "stats": "lerna run --parallel stats",
     "test": "jest",
-    "test:ci": "npm test a --silent --watchAll=false --coverage --reporters=jest-junit"
+    "test:ci": "npm test a -- --silent --watchAll=false --coverage --reporters=jest-junit"
   },
   "dependencies": {
     "@automapper/core": "8.7.7",

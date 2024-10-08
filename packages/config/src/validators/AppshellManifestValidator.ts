@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 import chalk from 'chalk';
-import { get, keys, set, uniq, values } from 'lodash';
+import { keys, uniq, values } from 'lodash';
 import { validate } from 'schema-utils';
 import { Schema } from 'schema-utils/declarations/validate';
-import semver from 'semver';
 import schema from '../schemas/appshell.manifest.json';
-import { AppshellManifest, ConfigValidator, ModuleFederationPluginOptions } from '../types';
+import { AppshellManifest, ConfigValidator, SharedObject } from '../types';
+import { compareSharedModules, printResults } from '../utils/compare';
 
 const hasIDCollisions = (...documents: AppshellManifest[]) => {
   const allIDs = documents.flatMap((document) =>
@@ -30,89 +30,30 @@ const hasEnvironmentCollisions = (...documents: AppshellManifest[]) => {
   return uniqueEnvironments.length !== allEnvironmentKeys.length;
 };
 
-const logMissingDependencyVersion = (
-  module: ModuleFederationPluginOptions,
-  pkg: string,
-  version: string | undefined,
-) => {
-  console.log(
-    chalk.magenta(
-      `Shared dependency version missing in MFE module ${module.name} for package ${pkg}: ${version}`,
-    ),
-  );
-};
-
-const logDependencyConflict = (
-  module: ModuleFederationPluginOptions,
-  pkg: string,
-  foundVersion: string,
-  expectedVersion: string,
-) => {
-  console.log(
-    chalk.magenta(
-      `Shared dependency version conflict in MFE module ${module.name} for package ${pkg}: ${foundVersion} does not satisfy ${expectedVersion}`,
-    ),
-  );
-};
-
-const logDependencyMatch = (
-  module: ModuleFederationPluginOptions,
-  pkg: string,
-  expectedVersion: string,
-) => {
-  console.log(
-    chalk.green(
-      `Shared dependency version matched in MFE module ${module.name} for package ${pkg}: ${expectedVersion}`,
-    ),
-  );
-};
-
-const processExistingDependency = (
-  module: ModuleFederationPluginOptions,
-  pkg: string,
-  pkgVersion: string,
-  expectedVersion: string,
-  allConflicts: Record<string, string>,
-) => {
-  const version = semver.minVersion(pkgVersion);
-  if (version && semver.satisfies(version, new semver.Range(expectedVersion))) {
-    logDependencyMatch(module, pkg, expectedVersion);
-  } else {
-    set(allConflicts, pkg, pkgVersion);
-    logDependencyConflict(module, pkg, pkgVersion, expectedVersion);
-  }
-};
-
-const processSharedDependencies = (
-  module: ModuleFederationPluginOptions,
-  allDependencies: Record<string, string>,
-  allConflicts: Record<string, string>,
-) => {
-  const shared = module.shared || {};
-
-  Object.keys(shared).forEach((pkg) => {
-    const version = get(shared, `${pkg}.requiredVersion`) as string | undefined;
-    if (!version) {
-      logMissingDependencyVersion(module, pkg, version);
-      return;
-    }
-
-    if (allDependencies[pkg]) {
-      processExistingDependency(module, pkg, version, allDependencies[pkg], allConflicts);
-    } else {
-      set(allDependencies, pkg, version);
-    }
-  });
-};
-
 const hasSharedDependencyConflict = (...documents: AppshellManifest[]) => {
-  const allDependencies: Record<string, string> = {};
-  const allConflicts: Record<string, string> = {};
   const allModules = documents.flatMap((document) => Object.values(document.modules));
+  const allConflicts = allModules.map((module, i, arr) => {
+    if (i < arr.length - 1) {
+      const sample = {
+        name: arr[i + 1].name || `Module ${i + 1}`,
+        shared: arr[i + 1].shared as SharedObject,
+      };
+      const baseline = {
+        name: module.name || `Module ${i}`,
+        shared: module.shared as SharedObject,
+      };
 
-  allModules.forEach((module) => processSharedDependencies(module, allDependencies, allConflicts));
+      return compareSharedModules(sample, baseline);
+    }
 
-  return Object.values(allConflicts).length !== 0;
+    return { conflicts: {}, missing: {}, satisfied: {} };
+  });
+
+  allConflicts.forEach((conflict) => printResults(conflict));
+
+  return (
+    allConflicts.reduce((acc, results) => acc + Object.values(results.conflicts).length, 0) !== 0
+  );
 };
 
 export default {
