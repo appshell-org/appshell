@@ -1,135 +1,89 @@
-import fs from 'fs';
-import https from 'https';
-import axios from '../src/axios';
+import * as config from '@appshell/config';
 import handler from '../src/handlers/outdated';
+import * as util from '../src/util/fetch';
 import packageSpec from './assets/package.json';
 import snapshot from './assets/snapshot.json';
 
-jest.mock('fs');
-jest.mock('../src/axios');
+jest.mock('@appshell/config');
+jest.mock('../src/util/fetch');
 
-describe('outdated', () => {
+describe('cli outdated', () => {
+  let fetchPackageSpecSpy: jest.SpyInstance;
+  let fetchSnapshotSpy: jest.SpyInstance;
+  let consoleErrorSpy: jest.SpyInstance;
+  beforeEach(() => {
+    fetchPackageSpecSpy = jest.spyOn(util, 'fetchPackageSpec').mockResolvedValue(packageSpec);
+    fetchSnapshotSpy = jest.spyOn(util, 'fetchSnapshot').mockResolvedValue(snapshot);
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
   });
 
   it('should throw if package.json not found', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const workingDir = 'does/not/exist';
     const registry = 'http://test.appshell.com';
+    const errorMessage = `Package spec not found at ${workingDir}/package.json`;
+    fetchPackageSpecSpy.mockRejectedValueOnce(new Error(errorMessage));
 
     await handler({ workingDir, registry, manager: 'npm' });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Error analyzing outdated shared dependencies',
-      expect.anything(),
-    );
-  });
-
-  it('should throw if package.json not found', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const workingDir = 'does/not/exist';
-    const registry = 'http://test.appshell.com';
-
-    jest.spyOn(fs, 'existsSync').mockReturnValue(false);
-
-    await handler({ workingDir, registry, manager: 'npm' });
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Error analyzing outdated shared dependencies',
-      expect.anything(),
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      `Error analyzing outdated shared dependencies`,
+      errorMessage,
     );
   });
 
   it('should fetch snapshot from a valid URL', async () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     const workingDir = '/path/to/workingDir';
     const registry = 'http://test.appshell.com';
+    const modulesToCheck = Object.keys(snapshot.modules).length;
 
-    const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
-    const readFileSyncSpy = jest
-      .spyOn(fs, 'readFileSync')
-      .mockReturnValue(JSON.stringify(packageSpec));
-    const axiosGetSpy = jest.spyOn(axios, 'get').mockResolvedValue({ status: 200, data: snapshot });
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    await handler({ workingDir, registry, manager: 'npm' });
 
-    await handler({ workingDir, registry, manager: 'npm', verbose: true });
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      `outdated --working-dir=${workingDir} --registry=${registry} --manager=npm --verbose=true`,
-    );
-    expect(existsSyncSpy).toHaveBeenCalledWith(`${workingDir}/package.json`);
-    expect(readFileSyncSpy).toHaveBeenCalledWith(`${workingDir}/package.json`, 'utf-8');
-    expect(axiosGetSpy).toHaveBeenCalledWith(`${registry}/appshell.snapshot.json`, {
-      httpsAgent: expect.any(https.Agent),
-      headers: {
-        'X-Api-Key': process.env.APPSHELL_API_KEY,
-      },
-    });
+    expect(config.outdated).toHaveBeenCalledTimes(modulesToCheck);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir);
+    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
   it('should fetch snapshot from a local directory', async () => {
     const workingDir = '/path/to/workingDir';
     const registry = '/path/to/registry';
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const existsSyncSpy = jest
-      .spyOn(fs, 'existsSync')
-      .mockReturnValueOnce(true)
-      .mockReturnValueOnce(true);
-    const readFileSyncSpy = jest
-      .spyOn(fs, 'readFileSync')
-      .mockReturnValueOnce(JSON.stringify(packageSpec))
-      .mockReturnValueOnce(JSON.stringify(snapshot));
-    const axiosGetSpy = jest.spyOn(axios, 'get');
+    const modulesToCheck = Object.keys(snapshot.modules).length;
 
-    await handler({ workingDir, registry, manager: 'npm', verbose: false });
+    await handler({ workingDir, registry, manager: 'npm' });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      `outdated --working-dir=${workingDir} --registry=${registry} --manager=npm --verbose=false`,
-    );
-    expect(existsSyncSpy).toHaveBeenCalledWith(`${workingDir}/package.json`);
-    expect(readFileSyncSpy).toHaveBeenCalledWith(`${workingDir}/package.json`, 'utf-8');
-    expect(existsSyncSpy).toHaveBeenCalledWith(`${registry}/appshell.snapshot.json`);
-    expect(readFileSyncSpy).toHaveBeenCalledWith(`${registry}/appshell.snapshot.json`, 'utf-8');
-    expect(axiosGetSpy).not.toHaveBeenCalled();
+    expect(config.outdated).toHaveBeenCalledTimes(modulesToCheck);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir);
+    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
   it('should throw an error if snapshot fetch fails', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const workingDir = '/path/to/workingDir';
     const registry = 'http://test.appshell.com';
+    fetchSnapshotSpy.mockRejectedValueOnce(new Error('Snapshot fetch failed'));
 
-    jest.spyOn(fs, 'existsSync').mockReturnValue(true);
-    jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
-    jest
-      .spyOn(axios, 'get')
-      .mockResolvedValue({ status: 500, statusText: 'Internal Server Error' });
+    await handler({ workingDir, registry, manager: 'npm' });
 
-    await handler({ workingDir, registry, manager: 'npm', verbose: true });
-
-    expect(consoleSpy).toHaveBeenCalledWith(
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Error analyzing outdated shared dependencies',
-      expect.anything(),
+      'Snapshot fetch failed',
     );
   });
 
   it('should handle and log errors', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const workingDir = '/path/to/workingDir';
     const registry = 'http://test.appshell.com';
+    fetchSnapshotSpy.mockRejectedValueOnce(new Error('Snapshot fetch failed'));
 
-    jest.spyOn(fs, 'existsSync').mockReturnValue(true);
-    jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
-      throw new Error('File read error');
-    });
+    await handler({ workingDir, registry, manager: 'npm' });
 
-    await handler({ workingDir, registry, manager: 'npm', verbose: true });
-
-    expect(consoleSpy).toHaveBeenCalledWith(
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Error analyzing outdated shared dependencies',
       expect.anything(),
     );

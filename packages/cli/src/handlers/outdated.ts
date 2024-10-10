@@ -1,69 +1,33 @@
 /* eslint-disable no-console */
-import { AppshellManifest, outdated, PackageSpec, utils } from '@appshell/config';
-import { HttpStatusCode } from 'axios';
-import fs from 'fs';
-import https from 'https';
+import { outdated, utils } from '@appshell/config';
 import { SharedObject } from 'packages/config/src/types';
-import axios from '../axios';
+import { fetchPackageSpec, fetchSnapshot } from '../util/fetch';
 
 export type OutdatedArgs = {
   workingDir: string;
   registry: string;
   manager: string;
-  verbose?: boolean;
-};
-
-export const fetchSnapshot = async (registryPathOrUrl: string) => {
-  console.debug(`Fetching snapshot from ${registryPathOrUrl}`);
-  const agent = new https.Agent({ rejectUnauthorized: false });
-  const res = await axios.get(registryPathOrUrl, {
-    httpsAgent: agent,
-    headers: {
-      'X-Api-Key': process.env.APPSHELL_API_KEY,
-    },
-  });
-  console.debug('Response:', JSON.stringify(res, null, 2));
-  if (res.status === HttpStatusCode.Ok) {
-    return res.data as AppshellManifest;
-  }
-
-  throw new Error(`Failed to fetch registry ${registryPathOrUrl}. ${res.statusText}`);
 };
 
 export default async (argv: OutdatedArgs) => {
-  const { workingDir, registry, manager, verbose } = argv;
+  const { workingDir, registry, manager } = argv;
 
   try {
-    console.log(
-      `outdated --working-dir=${workingDir} --registry=${registry} --manager=${manager} --verbose=${verbose}`,
-    );
+    console.log(`outdated --working-dir=${workingDir} --registry=${registry} --manager=${manager}`);
 
-    const packageSpecPath = `${workingDir}/package.json`;
-    const registryPathOrUrl = `${registry}/appshell.snapshot.json`;
-
-    if (!fs.existsSync(packageSpecPath)) {
-      throw new Error(`package.json not found. ${packageSpecPath}`);
-    }
-
-    const packageSpec = JSON.parse(fs.readFileSync(packageSpecPath, 'utf-8')) as PackageSpec;
-
-    let snapshot: AppshellManifest;
-    if (utils.isValidUrl(registryPathOrUrl)) {
-      snapshot = await fetchSnapshot(registryPathOrUrl);
-    } else if (fs.existsSync(registryPathOrUrl)) {
-      console.debug(`Reading snapshot from ${registryPathOrUrl}`);
-      snapshot = JSON.parse(fs.readFileSync(registryPathOrUrl, 'utf-8')) as AppshellManifest;
-    } else {
-      throw new Error(`Registry not found. ${registryPathOrUrl}`);
-    }
+    const packageSpec = await fetchPackageSpec(workingDir);
+    const snapshot = await fetchSnapshot(registry);
 
     console.debug('Snapshot:', JSON.stringify(snapshot, null, 2));
-    const jobs = Object.entries(snapshot.modules).map(([name, options]) =>
-      outdated(packageSpec, {
-        name: options.name || name,
+    const jobs = Object.entries(snapshot.modules).map(async ([name, options]) => {
+      const results = await outdated(packageSpec, {
+        name,
         shared: options.shared as SharedObject,
-      }),
-    );
+      });
+      utils.printResults(results);
+
+      return results;
+    });
 
     await Promise.all(jobs);
 

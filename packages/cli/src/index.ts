@@ -15,6 +15,7 @@ import generateManifestHandler, { GenerateManifestArgs } from './handlers/genera
 import outdatedHandler, { OutdatedArgs } from './handlers/outdated';
 import registerManifestHandler, { RegisterManifestArgs } from './handlers/register';
 import startHandler, { StartArgs } from './handlers/start';
+import syncHandler, { SyncArgs } from './handlers/sync';
 
 const startCommand: yargs.CommandModule<unknown, StartArgs> = {
   command: 'start',
@@ -274,7 +275,6 @@ const outdatedCommand: yargs.CommandModule<unknown, OutdatedArgs> = {
     yargs
       .option('workingDir', {
         alias: 'd',
-        string: true,
         default: '.',
         description: 'Working directory to analyze shared dependencies',
       })
@@ -282,7 +282,7 @@ const outdatedCommand: yargs.CommandModule<unknown, OutdatedArgs> = {
         alias: 'r',
         default: 'appshell_registry',
         type: 'string',
-        description: 'Registry path or url for the appshell manifests',
+        description: 'Registry path or url against which to compare shared dependencies',
       })
       .option('manager', {
         alias: 'm',
@@ -290,24 +290,67 @@ const outdatedCommand: yargs.CommandModule<unknown, OutdatedArgs> = {
         type: 'string',
         choices: ['npm', 'yarn'],
         description: 'Package manager to use for dependency resolution',
-      })
-      .option('verbose', {
-        alias: 'v',
-        boolean: true,
-        default: false,
-        type: 'boolean',
-        description: 'Verbose output',
-      })
-      .middleware((argv) => {
-        if (!argv.verbose) {
-          // eslint-disable-next-line no-console
-          console.debug = () => {};
-        }
       }),
   handler: outdatedHandler,
 };
 
+const syncCommand: yargs.CommandModule<unknown, SyncArgs> = {
+  command: 'sync',
+  aliases: ['s'],
+  describe: 'Sync local dependencies with shared dependencies specified by registry',
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  builder: (yargs) =>
+    yargs
+      .option('workingDir', {
+        alias: 'd',
+        type: 'string',
+        default: '.',
+        description: 'Working directory to analyze shared dependencies',
+      })
+      .option('registry', {
+        alias: 'r',
+        type: 'string',
+        default: 'appshell_registry',
+        description: 'Registry path or url to which shared dependencies are synchronized',
+      })
+      .option('resolutionStrategy', {
+        alias: 's',
+        type: 'string',
+        default: 'highest',
+        choices: ['highest', 'lowest'] as const,
+        description:
+          'Resolution strategy for dealing with multiple conflicts against the same package',
+      })
+      .option('packageManager', {
+        alias: 'm',
+        type: 'string',
+        default: 'npm',
+        choices: ['npm', 'yarn'] as const,
+        description: 'Package manager to use for dependency resolution',
+      })
+      .option('dryRun', {
+        boolean: true,
+        default: false,
+        type: 'boolean',
+        description: 'Perform a dry run without actually syncing dependencies',
+      }),
+  handler: syncHandler,
+};
+
 yargs(hideBin(process.argv))
+  .middleware((argv) => {
+    if (!argv.verbose) {
+      // eslint-disable-next-line no-console
+      console.debug = () => {};
+    }
+  })
+  .option('verbose', {
+    alias: 'v',
+    boolean: true,
+    default: false,
+    type: 'boolean',
+    description: 'Verbose output',
+  })
   .command({
     command: 'generate [target]',
     describe: 'Generates a resource',
@@ -321,6 +364,7 @@ yargs(hideBin(process.argv))
         .demandCommand(),
   })
   .command(outdatedCommand)
+  .command(syncCommand)
   .command(registerManifestCommand)
   .command(deregisterManifestCommand)
   .command(startCommand)

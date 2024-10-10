@@ -8,6 +8,7 @@ export { default as generateGlobalConfig } from './generate.global-config';
 export { default as generateManifest } from './generate.manifest';
 export { default as outdated } from './outdated';
 export { default as register } from './register';
+export { default as sync } from './sync';
 export type {
   AppshellConfig,
   AppshellConfigRemote,
