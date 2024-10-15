@@ -29,5 +29,8 @@
     "appshell",
     "cli"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "change-case": "^5.4.4"
+  }
 }

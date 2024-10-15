@@ -4,19 +4,20 @@ import { SharedObject } from 'packages/config/src/types';
 import { fetchPackageSpec, fetchSnapshot } from '../util/fetch';
 
 export type OutdatedArgs = {
-  workingDir: string;
+  apiKey: string | undefined;
   registry: string;
+  workingDir: string;
   manager: string;
 };
 
 export default async (argv: OutdatedArgs) => {
-  const { workingDir, registry, manager } = argv;
+  const { apiKey, workingDir, registry, manager } = argv;
 
   try {
     console.log(`outdated --working-dir=${workingDir} --registry=${registry} --manager=${manager}`);
 
-    const packageSpec = await fetchPackageSpec(workingDir);
-    const snapshot = await fetchSnapshot(registry);
+    const packageSpec = await fetchPackageSpec(workingDir, apiKey);
+    const snapshot = await fetchSnapshot(registry, apiKey);
 
     console.debug('Snapshot:', JSON.stringify(snapshot, null, 2));
     const jobs = Object.entries(snapshot.modules).map(async ([name, options]) => {

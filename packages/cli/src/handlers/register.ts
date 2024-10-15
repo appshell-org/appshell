@@ -3,8 +3,9 @@ import { AppshellManifest, register } from '@appshell/config';
 import fs from 'fs';
 
 export type RegisterManifestArgs = {
-  manifest: string[] | undefined;
+  apiKey: string | undefined;
   registry: string;
+  manifest: string[] | undefined;
   allowOverrides: boolean;
 };
 

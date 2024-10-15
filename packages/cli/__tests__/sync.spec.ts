@@ -1,6 +1,6 @@
 import * as config from '@appshell/config';
+import { ComparisonResult } from '@appshell/config/dist/types/types';
 import { merge } from 'lodash';
-import { ComparisonResult } from 'packages/config/src/types';
 import handler from '../src/handlers/sync';
 import * as util from '../src/util/fetch';
 import packageSpec from './assets/package.json';
@@ -12,6 +12,8 @@ const mockConflicts = (conflicts: Record<string, ComparisonResult>) =>
   merge({ satisfied: {}, missing: {} }, { conflicts });
 
 describe('cli sync', () => {
+  const apiKey = 'test-api-key';
+
   let fetchPackageSpecSpy: jest.SpyInstance;
   let fetchSnapshotSpy: jest.SpyInstance;
   let consoleErrorSpy: jest.SpyInstance;
@@ -58,6 +60,7 @@ describe('cli sync', () => {
     fetchPackageSpecSpy.mockRejectedValueOnce(new Error(errorMessage));
 
     await handler({
+      apiKey,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -65,7 +68,7 @@ describe('cli sync', () => {
       dryRun: false,
     });
 
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       `Error analyzing outdated shared dependencies`,
       errorMessage,
@@ -79,6 +82,7 @@ describe('cli sync', () => {
     const syncSpy = jest.spyOn(config, 'sync').mockResolvedValue();
 
     await handler({
+      apiKey,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -88,8 +92,8 @@ describe('cli sync', () => {
 
     expect(syncSpy).toHaveBeenCalled();
     expect(config.outdated).toHaveBeenCalledTimes(modulesToCheck);
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir);
-    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
+    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
@@ -100,6 +104,7 @@ describe('cli sync', () => {
     const syncSpy = jest.spyOn(config, 'sync').mockResolvedValue();
 
     await handler({
+      apiKey,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -109,8 +114,8 @@ describe('cli sync', () => {
 
     expect(syncSpy).toHaveBeenCalled();
     expect(config.outdated).toHaveBeenCalledTimes(modulesToCheck);
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir);
-    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
+    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
@@ -120,6 +125,7 @@ describe('cli sync', () => {
     fetchSnapshotSpy.mockRejectedValueOnce(new Error('Snapshot fetch failed'));
 
     await handler({
+      apiKey,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -139,6 +145,7 @@ describe('cli sync', () => {
     fetchSnapshotSpy.mockRejectedValueOnce(new Error('Snapshot fetch failed'));
 
     await handler({
+      apiKey,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -169,6 +176,7 @@ describe('cli sync', () => {
     );
 
     await handler({
+      apiKey,
       workingDir,
       registry,
       packageManager: 'npm',

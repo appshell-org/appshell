@@ -3,19 +3,30 @@ import { AppshellManifest, PackageSpec, utils } from '@appshell/config';
 import { HttpStatusCode } from 'axios';
 import fs from 'fs';
 import https from 'https';
+import { get } from 'lodash';
 import axios from './axios';
 
-export const fetchFromRegistry = async <T>(registryPathOrUrl: string) => {
+export const fetchFromRegistry = async <T>(registryPathOrUrl: string, apiKey?: string) => {
   console.debug(`Fetching snapshot from ${registryPathOrUrl}`);
   const agent = new https.Agent({ rejectUnauthorized: false });
   const res = await axios.get(registryPathOrUrl, {
     httpsAgent: agent,
     headers: {
-      'X-Api-Key': process.env.APPSHELL_API_KEY,
+      apikey: apiKey,
     },
   });
 
+  console.debug({
+    apikey: apiKey,
+  });
   console.debug(`/GET ${res.status} ${res.statusText}`);
+
+  const contentType = get(res.headers, 'content-type', '');
+  if (!contentType.includes('application/json')) {
+    throw new Error(
+      `Failed to fetch from registry ${registryPathOrUrl}. Invalid content type. ${contentType}`,
+    );
+  }
 
   if (res.status === HttpStatusCode.Ok) {
     return res.data as T;
@@ -26,11 +37,11 @@ export const fetchFromRegistry = async <T>(registryPathOrUrl: string) => {
   );
 };
 
-export const fetchSnapshot = async (registry: string) => {
+export const fetchSnapshot = async (registry: string, apiKey?: string) => {
   const registryPathOrUrl = `${registry}/appshell.snapshot.json`;
 
   if (utils.isValidUrl(registryPathOrUrl)) {
-    return fetchFromRegistry<AppshellManifest>(registryPathOrUrl);
+    return fetchFromRegistry<AppshellManifest>(registryPathOrUrl, apiKey);
   }
 
   if (fs.existsSync(registryPathOrUrl)) {
@@ -41,7 +52,7 @@ export const fetchSnapshot = async (registry: string) => {
   throw new Error(`Registry not found. ${registryPathOrUrl}`);
 };
 
-export const fetchPackageSpec = async (workingDir: string) => {
+export const fetchPackageSpec = async (workingDir: string, _apiKey?: string) => {
   const packageSpecPath = `${workingDir}/package.json`;
 
   if (!fs.existsSync(packageSpecPath)) {

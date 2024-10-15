@@ -45,6 +45,11 @@ export type ComparisonTarget = {
   dependencies: Record<string, string>;
 };
 
+export type CliConfig = Record<string, string> & {
+  apiKey: string;
+  registry: string;
+};
+
 /* appshell.config.yaml types */
 export type AppshellConfigRemote<TMetadata = Metadata> = {
   id: string;

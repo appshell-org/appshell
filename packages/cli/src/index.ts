@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
+
 /**
  * @appshell/cli package API
  */
-
+import os from 'os';
+import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import { readConfig } from '../../config/src/utils/config';
+import initConfigHandler, { InitArgs } from './handlers/config/init';
 import deregisterManifestHandler, { DeregisterManifestArgs } from './handlers/deregister';
 import generateEnvHandler, { GenerateEnvArgs } from './handlers/generate.env';
 import generateGlobalConfigHandler, {
@@ -16,6 +21,18 @@ import outdatedHandler, { OutdatedArgs } from './handlers/outdated';
 import registerManifestHandler, { RegisterManifestArgs } from './handlers/register';
 import startHandler, { StartArgs } from './handlers/start';
 import syncHandler, { SyncArgs } from './handlers/sync';
+
+const loadConfig = (cPath: string) => {
+  const originalDebug = console.debug;
+
+  console.debug = () => {};
+  const c = readConfig(cPath);
+  console.debug = originalDebug;
+
+  return c;
+};
+const configPath = process.env.APPSHELL_CONFIG || path.join(os.homedir(), '.appshell', 'config');
+const config = loadConfig(configPath);
 
 const startCommand: yargs.CommandModule<unknown, StartArgs> = {
   command: 'start',
@@ -88,9 +105,6 @@ const startCommand: yargs.CommandModule<unknown, StartArgs> = {
         description: 'One or more manifests to register',
       })
       .option('registry', {
-        alias: 'r',
-        default: './appshell_registry',
-        type: 'string',
         description: 'Registry with which the app is registered',
       })
       .option('baseRegistry', {
@@ -100,7 +114,7 @@ const startCommand: yargs.CommandModule<unknown, StartArgs> = {
         type: 'array',
         description:
           'One or more base registries to incorporate into the global appshell configuration',
-      }),
+      }) as yargs.Argv<StartArgs>,
   handler: startHandler,
 };
 
@@ -110,6 +124,9 @@ const registerManifestCommand: yargs.CommandModule<unknown, RegisterManifestArgs
   // eslint-disable-next-line @typescript-eslint/no-shadow
   builder: (yargs) =>
     yargs
+      .option('registry', {
+        description: 'Registry with which the app is registered',
+      })
       .option('manifest', {
         alias: 'm',
         string: true,
@@ -122,13 +139,7 @@ const registerManifestCommand: yargs.CommandModule<unknown, RegisterManifestArgs
         boolean: false,
         type: 'boolean',
         description: 'Allow overrides to be propagated',
-      })
-      .option('registry', {
-        alias: 'r',
-        default: 'appshell_registry',
-        type: 'string',
-        description: 'Registry path for the appshell manifests',
-      }),
+      }) as yargs.Argv<RegisterManifestArgs>,
   handler: registerManifestHandler,
 };
 
@@ -139,18 +150,14 @@ const deregisterManifestCommand: yargs.CommandModule<unknown, DeregisterManifest
   builder: (yargs) =>
     yargs
       .option('key', {
-        alias: 'k',
         string: true,
         type: 'array',
         requiresArg: true,
         description: 'One or more keys for manifests to deregister',
       })
       .option('registry', {
-        alias: 'r',
-        default: 'appshell_registry',
-        type: 'string',
-        description: 'Registry path for the appshell manifests',
-      }),
+        description: 'Registry with which the app is deregistered',
+      }) as yargs.Argv<DeregisterManifestArgs>,
   handler: deregisterManifestHandler,
 };
 
@@ -181,7 +188,6 @@ const generateGlobalConfigCommand: yargs.CommandModule<unknown, GenerateGlobalCo
           "If false, registry files are fetched without validating the registry's SSL cert",
       })
       .option('registry', {
-        alias: 'r',
         string: true,
         type: 'array',
         requiresArg: true,
@@ -273,16 +279,13 @@ const outdatedCommand: yargs.CommandModule<unknown, OutdatedArgs> = {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   builder: (yargs) =>
     yargs
+      .option('registry', {
+        description: 'Registry against which the app is compared',
+      })
       .option('workingDir', {
         alias: 'd',
         default: '.',
         description: 'Working directory to analyze shared dependencies',
-      })
-      .option('registry', {
-        alias: 'r',
-        default: 'appshell_registry',
-        type: 'string',
-        description: 'Registry path or url against which to compare shared dependencies',
       })
       .option('manager', {
         alias: 'm',
@@ -290,7 +293,7 @@ const outdatedCommand: yargs.CommandModule<unknown, OutdatedArgs> = {
         type: 'string',
         choices: ['npm', 'yarn'],
         description: 'Package manager to use for dependency resolution',
-      }),
+      }) as yargs.Argv<OutdatedArgs>,
   handler: outdatedHandler,
 };
 
@@ -301,17 +304,14 @@ const syncCommand: yargs.CommandModule<unknown, SyncArgs> = {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   builder: (yargs) =>
     yargs
+      .option('registry', {
+        description: 'Registry with which the app shared dependencies are synced',
+      })
       .option('workingDir', {
         alias: 'd',
         type: 'string',
         default: '.',
         description: 'Working directory to analyze shared dependencies',
-      })
-      .option('registry', {
-        alias: 'r',
-        type: 'string',
-        default: 'appshell_registry',
-        description: 'Registry path or url to which shared dependencies are synchronized',
       })
       .option('resolutionStrategy', {
         alias: 's',
@@ -333,16 +333,39 @@ const syncCommand: yargs.CommandModule<unknown, SyncArgs> = {
         default: false,
         type: 'boolean',
         description: 'Perform a dry run without actually syncing dependencies',
-      }),
+      }) as yargs.Argv<SyncArgs>,
   handler: syncHandler,
 };
 
+const initConfigCommand: yargs.CommandModule<unknown, InitArgs> = {
+  command: 'init',
+  aliases: ['i'],
+  describe: 'Initialize the configuration',
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  builder: (yargs) =>
+    yargs.option('config', {
+      alias: 'c',
+      describe: 'Path to the cli config file',
+      default: configPath,
+      type: 'string',
+    }) as yargs.Argv<InitArgs>,
+  handler: initConfigHandler,
+};
+
 yargs(hideBin(process.argv))
-  .middleware((argv) => {
-    if (!argv.verbose) {
-      // eslint-disable-next-line no-console
-      console.debug = () => {};
-    }
+  .option('apiKey', {
+    alias: 'k',
+    default: process.env.APPSHELL_API_KEY || config.apiKey || '',
+    type: 'string',
+    description: 'Api key to use for appshell registry',
+    global: true,
+  })
+  .option('registry', {
+    alias: 'r',
+    describe: 'Appshell registry to operate against',
+    default: process.env.APPSHELL_REGISTRY || config.registry || './appshell_registry',
+    type: 'string',
+    global: true,
   })
   .option('verbose', {
     alias: 'v',
@@ -350,6 +373,13 @@ yargs(hideBin(process.argv))
     default: false,
     type: 'boolean',
     description: 'Verbose output',
+    global: true,
+  })
+  .middleware((argv) => {
+    if (!argv.verbose) {
+      // eslint-disable-next-line no-console
+      console.debug = () => {};
+    }
   })
   .command({
     command: 'generate [target]',
@@ -362,6 +392,13 @@ yargs(hideBin(process.argv))
         .command(generateEnvCommand)
         .command(generateGlobalConfigCommand)
         .demandCommand(),
+  })
+  .command({
+    command: 'config [target]',
+    describe: 'Configures the appshell cli',
+    handler: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    builder: (yargs) => yargs.command(initConfigCommand).demandCommand(),
   })
   .command(outdatedCommand)
   .command(syncCommand)

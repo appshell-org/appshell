@@ -1,6 +1,5 @@
 import { HttpStatusCode } from 'axios';
 import fs from 'fs';
-import https from 'https';
 import axios from '../src/util/axios';
 import { fetchPackageSpec, fetchSnapshot } from '../src/util/fetch';
 import snapshot from './assets/snapshot.json';
@@ -9,6 +8,8 @@ jest.mock('fs');
 jest.mock('../src/util/axios');
 
 describe('cli util', () => {
+  const apiKey = 'test-api-key';
+
   afterEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -38,18 +39,24 @@ describe('cli util', () => {
     it('should fetch snapshot from a valid URL', async () => {
       const registry = 'http://test.appshell.com';
 
-      const axiosGetSpy = jest
-        .spyOn(axios, 'get')
-        .mockResolvedValue({ status: HttpStatusCode.Ok, statusText: 'OK', data: snapshot });
-
-      await fetchSnapshot(registry);
-
-      expect(axiosGetSpy).toHaveBeenCalledWith(`${registry}/appshell.snapshot.json`, {
-        httpsAgent: expect.any(https.Agent),
-        headers: {
-          'X-Api-Key': process.env.APPSHELL_API_KEY,
-        },
+      const axiosGetSpy = jest.spyOn(axios, 'get').mockResolvedValue({
+        headers: { 'content-type': 'application/json' },
+        status: HttpStatusCode.Ok,
+        statusText: 'OK',
+        data: snapshot,
       });
+
+      await fetchSnapshot(registry, apiKey);
+
+      expect(axiosGetSpy).toHaveBeenCalledWith(
+        `${registry}/appshell.snapshot.json`,
+        expect.objectContaining({
+          headers: {
+            apikey: apiKey,
+          },
+          httpsAgent: expect.anything(),
+        }),
+      );
     });
 
     it('should fetch snapshot from a local directory', async () => {
@@ -60,7 +67,7 @@ describe('cli util', () => {
         .mockReturnValueOnce(JSON.stringify(snapshot));
       const axiosGetSpy = jest.spyOn(axios, 'get');
 
-      await fetchSnapshot(registry);
+      await fetchSnapshot(registry, apiKey);
 
       expect(existsSyncSpy).toHaveBeenCalledWith(`${registry}/appshell.snapshot.json`);
       expect(readFileSyncSpy).toHaveBeenCalledWith(`${registry}/appshell.snapshot.json`, 'utf-8');
@@ -70,6 +77,7 @@ describe('cli util', () => {
     it('should throw an error if snapshot fetch fails', async () => {
       const registry = 'http://test.appshell.com';
       const response = {
+        headers: { 'content-type': 'application/json' },
         status: HttpStatusCode.InternalServerError,
         statusText: 'Internal Server Error',
       };
@@ -77,8 +85,24 @@ describe('cli util', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
       jest.spyOn(axios, 'get').mockResolvedValue(response);
 
-      await expect(() => fetchSnapshot(registry)).rejects.toThrowError(
+      await expect(() => fetchSnapshot(registry, apiKey)).rejects.toThrowError(
         `Failed to fetch from registry ${registry}/appshell.snapshot.json. ${response.status} ${response.statusText}`,
+      );
+    });
+
+    it('should throw an error if response does not contain the correct content type', async () => {
+      const registry = 'http://test.appshell.com';
+      const response = {
+        headers: { 'content-type': 'text/html' },
+        status: HttpStatusCode.InternalServerError,
+        statusText: 'Internal Server Error',
+      };
+      jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
+      jest.spyOn(axios, 'get').mockResolvedValue(response);
+
+      await expect(() => fetchSnapshot(registry, apiKey)).rejects.toThrowError(
+        `Failed to fetch from registry ${registry}/appshell.snapshot.json. Invalid content type. text/html`,
       );
     });
   });

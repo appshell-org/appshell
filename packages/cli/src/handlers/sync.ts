@@ -5,23 +5,24 @@ import { ComparisonResult, SharedObject } from 'packages/config/src/types';
 import { fetchPackageSpec, fetchSnapshot } from '../util/fetch';
 
 export type SyncArgs = {
-  workingDir: string;
+  apiKey: string | undefined;
   registry: string;
+  workingDir: string;
   packageManager: string;
   resolutionStrategy: string;
   dryRun: boolean;
 };
 
 export default async (argv: SyncArgs) => {
-  const { workingDir, registry, packageManager, resolutionStrategy, dryRun } = argv;
+  const { workingDir, registry, packageManager, resolutionStrategy, dryRun, apiKey } = argv;
 
   try {
     console.log(
       `sync --working-dir=${workingDir} --registry=${registry} --package-manager=${packageManager} --resolution-strategy=${resolutionStrategy} --dry-run=${dryRun}`,
     );
 
-    const packageSpec = await fetchPackageSpec(workingDir);
-    const snapshot = await fetchSnapshot(registry);
+    const packageSpec = await fetchPackageSpec(workingDir, apiKey);
+    const snapshot = await fetchSnapshot(registry, apiKey);
 
     console.debug('Snapshot:', JSON.stringify(snapshot, null, 2));
     const jobs = Object.entries(snapshot.modules).map(([name, options]) =>
@@ -37,6 +38,7 @@ export default async (argv: SyncArgs) => {
     const outOfSync = results.reduce(
       (acc, result) =>
         Object.values(result.conflicts).reduce((prev, conflict) => {
+          // eslint-disable-next-line no-param-reassign
           prev[`${conflict.packageName}@${conflict.baselineVersion}`] = conflict;
 
           return prev;
