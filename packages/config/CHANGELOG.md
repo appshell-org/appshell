@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.1](https://github.com/navaris/appshell/compare/@appshell/config@0.8.0-alpha.0...@appshell/config@0.8.0-alpha.1) (2024-10-16)
+
+
+### Features
+
+* publish config package ([0c7acba](https://github.com/navaris/appshell/commit/0c7acba4a1ced68d3de0316166e6a1dfbfde2f85))
+
+
+
+
+
 # [0.8.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/config@0.7.0...@appshell/config@0.8.0-alpha.0) (2024-10-16)
 
 
