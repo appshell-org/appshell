@@ -127,10 +127,10 @@ describe('sync', () => {
       }
     }) as any;
 
-    let execSpy: jest.SpyInstance;
+    let processSpy: jest.SpyInstance;
     beforeEach(() => {
-      execSpy = jest
-        .spyOn(util, 'exec')
+      processSpy = jest
+        .spyOn(util, 'spawn')
         .mockReturnValueOnce(mockDeep<ChildProcess>({ on: mockOn, stdout: { on: mockOn } }));
     });
 
@@ -150,8 +150,9 @@ describe('sync', () => {
         'npm',
       );
 
-      expect(execSpy).toHaveBeenCalledWith(
-        `cd ${workingDir} && npm install test-package-1@1.0.0 test-package-2@2.0.0`,
+      expect(processSpy).toHaveBeenCalledWith(
+        `npm install test-package-1@1.0.0 test-package-2@2.0.0 --force`,
+        { cwd: workingDir, stdio: 'inherit' },
       );
     });
 
@@ -166,8 +167,9 @@ describe('sync', () => {
         'yarn',
       );
 
-      expect(execSpy).toHaveBeenCalledWith(
-        `cd ${workingDir} && yarn add test-package-1@1.0.0 test-package-2@2.0.0`,
+      expect(processSpy).toHaveBeenCalledWith(
+        `yarn add test-package-1@1.0.0 test-package-2@2.0.0 --force`,
+        { cwd: workingDir, stdio: 'inherit' },
       );
     });
   });

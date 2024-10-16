@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import chalk from 'chalk';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import { groupBy, uniq } from 'lodash';
 import semver from 'semver';
 import { ComparisonResult } from './types';
@@ -45,13 +45,9 @@ export const syncDependencies = async (
   const action = packageManager === 'npm' ? 'install' : 'add';
 
   await new Promise((resolve, reject) => {
-    const command = `cd ${workingDir} && ${packageManager} ${action} ${packages.join(' ')}`;
+    const command = `${packageManager} ${action} ${packages.join(' ')} --force`;
     console.log(command);
-    const process = exec(command);
-
-    process.stdout?.on('data', (data) => {
-      console.log(data);
-    });
+    const process = spawn(command, { stdio: 'inherit', cwd: workingDir });
 
     process.on('exit', (code) => {
       console.debug(`${packageManager} process exited with code: ${code}`);
