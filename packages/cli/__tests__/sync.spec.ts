@@ -192,6 +192,7 @@ describe('cli sync', () => {
       registry,
       {
         'test-package-1@1.0.0': {
+          status: 'conflict',
           packageName: 'test-package-1',
           sampleModule: 'sample-module-1',
           sampleVersion: '2.0.0',
@@ -199,6 +200,7 @@ describe('cli sync', () => {
           baselineVersion: '1.0.0',
         },
         'test-package-2@2.0.0': {
+          status: 'conflict',
           packageName: 'test-package-2',
           sampleModule: 'sample-module-1',
           sampleVersion: '3.0.0',
@@ -206,6 +208,7 @@ describe('cli sync', () => {
           baselineVersion: '2.0.0',
         },
         'test-package-2@^2.3.0': {
+          status: 'conflict',
           packageName: 'test-package-2',
           sampleModule: 'sample-module-1',
           sampleVersion: '3.0.0',
