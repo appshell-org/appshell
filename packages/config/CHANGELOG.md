@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/config@0.7.0...@appshell/config@0.8.0-alpha.0) (2024-10-16)
+
+
+### Bug Fixes
+
+* build issues ([499431d](https://github.com/navaris/appshell/commit/499431d423b0616888f61916299d0186eaeebd6f))
+
+
+### Features
+
+* change outdated output to tables ([58b07c1](https://github.com/navaris/appshell/commit/58b07c18bf1b915517793ae379ba69738006b77d))
+* config init command, global apikey, registry args ([eef5c50](https://github.com/navaris/appshell/commit/eef5c503e7399537ec8956acd462b45060923aa1))
+* outdated cli command ([3757286](https://github.com/navaris/appshell/commit/37572862a8d1e4615fd6648e99be1adbb9650f3c))
+* sync cli command ([680f9be](https://github.com/navaris/appshell/commit/680f9be817271747b89210ce5b5dc9688c868e7d))
+
+
+
+
+
 # [0.7.0](https://github.com/navaris/appshell/compare/@appshell/config@0.6.0...@appshell/config@0.7.0) (2024-09-26)
 
 
