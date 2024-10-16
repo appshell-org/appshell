@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import chalk from 'chalk';
-import { isString, set } from 'lodash';
+import { isString } from 'lodash';
 import semver from 'semver';
 import {
   ComparisonResult,
@@ -13,15 +13,17 @@ import {
 export const extractDependencies = (sharedModule: SharedModuleSpec) =>
   Object.entries(sharedModule.shared).reduce((acc, [key, value]) => {
     const version = isString(value) ? value : value.requiredVersion || value.version;
-    return set(acc, key, version);
-  }, {} as Record<string, string>);
+    acc[key] = version ? String(version) : undefined;
+
+    return acc;
+  }, {} as Record<string, string | undefined>);
 
 export const compareDependency = (
   packageName: string,
   sampleModule: string,
-  sampleVersion: string,
+  sampleVersion: string | undefined,
   baselineModule: string,
-  baselineVersion: string,
+  baselineVersion: string | undefined,
   results: ComparisonResults,
 ) => {
   console.debug(
@@ -32,38 +34,43 @@ export const compareDependency = (
     return results;
   }
 
+  const { missing, satisfied, conflicts } = results;
+
   if (!sampleVersion) {
-    set(results.missing, packageName, {
+    missing[packageName] = {
+      status: 'missing',
       packageName,
       sampleModule,
       sampleVersion,
       baselineModule,
       baselineVersion,
-    } as ComparisonResult);
+    } as ComparisonResult;
 
     return results;
   }
 
   const version = semver.minVersion(sampleVersion);
   if (version && semver.satisfies(version, new semver.Range(baselineVersion))) {
-    set(results.satisfied, packageName, {
+    satisfied[packageName] = {
+      status: 'satisfied',
       packageName,
       sampleModule,
       sampleVersion,
       baselineModule,
       baselineVersion,
-    } as ComparisonResult);
+    } as ComparisonResult;
 
     return results;
   }
 
-  set(results.conflicts, packageName, {
+  conflicts[packageName] = {
+    status: 'conflict',
     packageName,
     sampleModule,
     sampleVersion,
     baselineModule,
     baselineVersion,
-  } as ComparisonResult);
+  } as ComparisonResult;
 
   return results;
 };
@@ -94,9 +101,14 @@ export const compareSharedDependencies = (
     name: sharedModule.name || 'unspecified',
     dependencies: Object.entries(sharedModule.shared).reduce((acc, [key, value]) => {
       const version = isString(value) ? value : value.requiredVersion || value.version;
-      return set(acc, key, version);
-    }, {} as Record<string, string>),
+      acc[key] = version ? String(version) : undefined;
+
+      return acc;
+    }, {} as Record<string, string | undefined>),
   };
+
+  console.debug('Sample:', JSON.stringify(sample, null, 2));
+  console.debug('Baseline:', JSON.stringify(baseline, null, 2));
 
   return compareDependencies(sample, baseline);
 };

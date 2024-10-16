@@ -7,6 +7,7 @@ describe('sync', () => {
   const registry = 'http://test.appshell.com';
   const outOfSync = {
     'test-package-1@1.0.0': {
+      status: 'conflict' as 'conflict' | 'missing' | 'satisfied',
       packageName: 'test-package-1',
       sampleModule: 'sample-module-1',
       sampleVersion: '2.0.0',
@@ -14,6 +15,7 @@ describe('sync', () => {
       baselineVersion: '1.0.0',
     },
     'test-package-2@2.0.0': {
+      status: 'conflict' as 'conflict' | 'missing' | 'satisfied',
       packageName: 'test-package-2',
       sampleModule: 'sample-module-1',
       sampleVersion: '3.0.0',
@@ -24,6 +26,7 @@ describe('sync', () => {
 
   const duplicateConflicts = {
     'test-package-2@^2.3.0': {
+      status: 'conflict' as 'conflict' | 'missing' | 'satisfied',
       packageName: 'test-package-2',
       sampleModule: 'sample-module-1',
       sampleVersion: '3.0.0',

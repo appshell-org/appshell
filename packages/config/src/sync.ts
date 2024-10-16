@@ -8,7 +8,7 @@ import { ComparisonResult } from './types';
 export type ResolutionStrategy = 'highest' | 'lowest';
 export type PackageManager = 'npm' | 'yarn';
 
-export const logPackageConflicts = (conflicts: ComparisonResult[], resolutionStrategy: string) => {
+export const logPackageConflicts = (conflicts: ComparisonResult[]) => {
   if (!conflicts.length) {
     return;
   }
@@ -20,7 +20,7 @@ export const logPackageConflicts = (conflicts: ComparisonResult[], resolutionStr
         conflicts.length > 1 ? 's' : ''
       } against the same package ${packageName} from modules ${uniq(
         conflicts.flat().map((conflict) => conflict.baselineModule),
-      ).join(', ')} using ${resolutionStrategy} resolution strategy`,
+      ).join(', ')}`,
     ),
   );
 
@@ -75,7 +75,7 @@ export const resolveConflicts = (
 
   return conflicts
     .map((conflict) => {
-      logPackageConflicts(conflict, resolutionStrategy);
+      logPackageConflicts(conflict);
 
       return conflict.reduce((acc, current) => {
         const accVersion = semver.minVersion(acc.baselineVersion);
@@ -90,8 +90,14 @@ export const resolveConflicts = (
     .map((conflict) => `${conflict.packageName}@${conflict.baselineVersion}`);
 };
 
-export const groupDuplicates = (conflicts: Record<string, ComparisonResult>) =>
+export const groupByPackageName = (conflicts: Record<string, ComparisonResult>) =>
   Object.values(groupBy(Object.values(conflicts), (conflict) => conflict.packageName));
+
+export const groupBySampleModule = (conflicts: Record<string, ComparisonResult>) =>
+  Object.values(groupBy(Object.values(conflicts), (conflict) => conflict.sampleModule));
+
+export const groupByBaselineModule = (conflicts: Record<string, ComparisonResult>) =>
+  Object.values(groupBy(Object.values(conflicts), (conflict) => conflict.baselineModule));
 
 /**
  * Syncs shared dependencies
@@ -118,7 +124,7 @@ export default async (
     ),
   );
 
-  const conflictGroups = groupDuplicates(conflicts);
+  const conflictGroups = groupByPackageName(conflicts);
   const outOfSync = resolveConflicts(conflictGroups, resolutionStrategy);
 
   if (dryRun) {

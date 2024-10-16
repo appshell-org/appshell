@@ -27,6 +27,7 @@ export type SharedModuleSpec = {
 };
 
 export type ComparisonResult = {
+  status: 'conflict' | 'missing' | 'satisfied';
   packageName: string;
   sampleModule: string;
   sampleVersion: string;
@@ -42,7 +43,7 @@ export type ComparisonResults = {
 
 export type ComparisonTarget = {
   name: string;
-  dependencies: Record<string, string>;
+  dependencies: Record<string, string | undefined>;
 };
 
 export type CliConfig = Record<string, string> & {

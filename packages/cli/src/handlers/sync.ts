@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { outdated, sync } from '@appshell/config';
-import { PackageManager, ResolutionStrategy } from 'packages/config/src/sync';
 import { ComparisonResult, SharedObject } from 'packages/config/src/types';
+import { PackageManager, ResolutionStrategy } from '../../../config/src/sync';
 import { fetchPackageSpec, fetchSnapshot } from '../util/fetch';
 
 export type SyncArgs = {

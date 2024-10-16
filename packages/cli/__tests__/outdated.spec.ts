@@ -1,10 +1,10 @@
 import * as config from '@appshell/config';
+import { ComparisonResults } from '../../config/src/types';
 import handler from '../src/handlers/outdated';
 import * as util from '../src/util/fetch';
 import packageSpec from './assets/package.json';
 import snapshot from './assets/snapshot.json';
 
-jest.mock('@appshell/config');
 jest.mock('../src/util/fetch');
 
 describe('cli outdated', () => {
@@ -42,10 +42,13 @@ describe('cli outdated', () => {
     const workingDir = '/path/to/workingDir';
     const registry = 'http://test.appshell.com';
     const modulesToCheck = Object.keys(snapshot.modules).length;
+    const outdatedSpy = jest
+      .spyOn(config, 'outdated')
+      .mockResolvedValue({ conflicts: {}, missing: {}, satisfied: {} } as ComparisonResults);
 
     await handler({ apiKey, workingDir, registry, manager: 'npm' });
 
-    expect(config.outdated).toHaveBeenCalledTimes(modulesToCheck);
+    expect(outdatedSpy).toHaveBeenCalledTimes(modulesToCheck);
     expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
     expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
@@ -55,10 +58,13 @@ describe('cli outdated', () => {
     const workingDir = '/path/to/workingDir';
     const registry = '/path/to/registry';
     const modulesToCheck = Object.keys(snapshot.modules).length;
+    const outdatedSpy = jest
+      .spyOn(config, 'outdated')
+      .mockResolvedValue({ conflicts: {}, missing: {}, satisfied: {} } as ComparisonResults);
 
     await handler({ apiKey, workingDir, registry, manager: 'npm' });
 
-    expect(config.outdated).toHaveBeenCalledTimes(modulesToCheck);
+    expect(outdatedSpy).toHaveBeenCalledTimes(modulesToCheck);
     expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
     expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey);
     expect(consoleErrorSpy).not.toHaveBeenCalled();

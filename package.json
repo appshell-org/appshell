@@ -21,6 +21,7 @@
     "@automapper/pojos": "8.7.7",
     "axios": "1.4.0",
     "chalk": "4",
+    "cli-table3": "^0.6.5",
     "cpy-cli": "5.0.0",
     "cross-env": "7.0.3",
     "dotenv-cli": "7.0.0",
