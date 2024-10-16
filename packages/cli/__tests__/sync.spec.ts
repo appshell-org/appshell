@@ -1,5 +1,5 @@
 import * as config from '@appshell/config';
-import { ComparisonResult } from '@appshell/config/dist/types/types';
+import { ComparisonResult } from '@appshell/config';
 import { merge } from 'lodash';
 import handler from '../src/handlers/sync';
 import * as util from '../src/util/fetch';
@@ -27,6 +27,7 @@ describe('cli sync', () => {
       .mockResolvedValueOnce(
         mockConflicts({
           'test-package-1': {
+            status: 'conflict',
             packageName: 'test-package-1',
             sampleModule: 'sample-module-1',
             sampleVersion: '2.0.0',
@@ -38,6 +39,7 @@ describe('cli sync', () => {
       .mockResolvedValueOnce(
         mockConflicts({
           'test-package-2': {
+            status: 'conflict',
             packageName: 'test-package-2',
             sampleModule: 'sample-module-1',
             sampleVersion: '3.0.0',
@@ -166,6 +168,7 @@ describe('cli sync', () => {
     outdatedSpy.mockResolvedValueOnce(
       mockConflicts({
         'test-package-2': {
+          status: 'conflict',
           packageName: 'test-package-2',
           sampleModule: 'sample-module-1',
           sampleVersion: '3.0.0',
