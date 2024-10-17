@@ -2,6 +2,7 @@ import * as config from '@appshell/config';
 import { ComparisonResults } from '../../config/src/types';
 import handler from '../src/handlers/outdated';
 import * as util from '../src/util/fetch';
+import outdatedResults from './assets/outdated.results.json';
 import packageSpec from './assets/package.json';
 import snapshot from './assets/snapshot.json';
 
@@ -9,6 +10,7 @@ jest.mock('../src/util/fetch');
 
 describe('cli outdated', () => {
   const apiKey = 'test-api-key';
+  const testResults = outdatedResults as ComparisonResults;
   let fetchPackageSpecSpy: jest.SpyInstance;
   let fetchSnapshotSpy: jest.SpyInstance;
   let consoleErrorSpy: jest.SpyInstance;
@@ -42,9 +44,7 @@ describe('cli outdated', () => {
     const workingDir = '/path/to/workingDir';
     const registry = 'http://test.appshell.com';
     const modulesToCheck = Object.keys(snapshot.modules).length;
-    const outdatedSpy = jest
-      .spyOn(config, 'outdated')
-      .mockResolvedValue({ conflicts: {}, missing: {}, satisfied: {} } as ComparisonResults);
+    const outdatedSpy = jest.spyOn(config, 'outdated').mockResolvedValue(testResults);
 
     await handler({ apiKey, workingDir, registry, manager: 'npm' });
 
@@ -58,9 +58,7 @@ describe('cli outdated', () => {
     const workingDir = '/path/to/workingDir';
     const registry = '/path/to/registry';
     const modulesToCheck = Object.keys(snapshot.modules).length;
-    const outdatedSpy = jest
-      .spyOn(config, 'outdated')
-      .mockResolvedValue({ conflicts: {}, missing: {}, satisfied: {} } as ComparisonResults);
+    const outdatedSpy = jest.spyOn(config, 'outdated').mockResolvedValue(testResults);
 
     await handler({ apiKey, workingDir, registry, manager: 'npm' });
 
