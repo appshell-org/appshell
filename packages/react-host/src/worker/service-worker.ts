@@ -38,7 +38,7 @@ export const handleFetchEvent = (event: FetchEvent) => {
           credentials: 'same-origin',
           headers: new Headers({
             ...headersToObject(event.request.headers),
-            'X-API-KEY': self.apiKey,
+            apikey: self.apiKey,
           }),
         }),
       )

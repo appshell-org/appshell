@@ -75,7 +75,7 @@ export default async (argv: StartArgs): Promise<void> => {
       fs.mkdirSync(registry);
     }
     const watchRegistry = exec(
-      `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert}"`,
+      `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert} && if [ -d ./appshell_registry ]; then cp -R ${registry}/* ${outDir}; fi"`,
     );
     watchRegistry.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console

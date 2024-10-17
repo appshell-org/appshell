@@ -3,6 +3,8 @@ import fs from 'fs';
 import registerManifestHandler from '../src/handlers/register';
 
 describe('register.manifest', () => {
+  const apiKey = 'test-api-key';
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
@@ -20,7 +22,7 @@ describe('register.manifest', () => {
       'assets/appshell3.manifest.json',
     ];
 
-    await registerManifestHandler({ manifest: manifests, registry, allowOverrides: false });
+    await registerManifestHandler({ apiKey, manifest: manifests, registry, allowOverrides: false });
 
     manifests.forEach((manifest) => {
       expect(existsSyncSpy).toHaveBeenCalledWith(manifest);
@@ -39,7 +41,7 @@ describe('register.manifest', () => {
       'assets/appshell2.manifest.json',
       'assets/appshell3.manifest.json',
     ];
-    await registerManifestHandler({ manifest: manifests, registry, allowOverrides: false });
+    await registerManifestHandler({ apiKey, manifest: manifests, registry, allowOverrides: false });
 
     expect(registerSpy).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalledTimes(1);

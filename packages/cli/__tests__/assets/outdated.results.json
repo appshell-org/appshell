@@ -1,0 +1,64 @@
+{
+  "conflicts": {
+    "styled-components": {
+      "status": "conflict",
+      "packageName": "styled-components",
+      "sampleModule": "appshell-mfe-sd-app",
+      "sampleVersion": "^5.3.6",
+      "baselineModule": "ContainerModule",
+      "baselineVersion": "6.0.0-rc.3"
+    }
+  },
+  "missing": {
+    "react-router-dom": {
+      "status": "missing",
+      "packageName": "react-router-dom",
+      "sampleModule": "appshell-mfe-sd-app",
+      "sampleVersion": "",
+      "baselineModule": "ContainerModule",
+      "baselineVersion": "^6.4.2"
+    },
+    "socket.io-client": {
+      "status": "missing",
+      "packageName": "socket.io-client",
+      "sampleModule": "appshell-mfe-sd-app",
+      "sampleVersion": "",
+      "baselineModule": "PingModule",
+      "baselineVersion": "^4.7.2"
+    }
+  },
+  "satisfied": {
+    "react": {
+      "status": "satisfied",
+      "packageName": "react",
+      "sampleModule": "appshell-mfe-sd-app",
+      "sampleVersion": "18.2.0",
+      "baselineModule": "ContainerModule",
+      "baselineVersion": "18.2.0"
+    },
+    "react-dom": {
+      "status": "satisfied",
+      "packageName": "react-dom",
+      "sampleModule": "appshell-mfe-sd-app",
+      "sampleVersion": "18.2.0",
+      "baselineModule": "ContainerModule",
+      "baselineVersion": "18.2.0"
+    },
+    "react-refresh": {
+      "status": "satisfied",
+      "packageName": "react-refresh",
+      "sampleModule": "appshell-mfe-sd-app",
+      "sampleVersion": "^0.14.0",
+      "baselineModule": "ContainerModule",
+      "baselineVersion": "^0.14.0"
+    },
+    "@appshell/react": {
+      "status": "satisfied",
+      "packageName": "@appshell/react",
+      "sampleModule": "appshell-mfe-sd-app",
+      "sampleVersion": "^0.3.0",
+      "baselineModule": "ContainerModule",
+      "baselineVersion": "^0.3.0"
+    }
+  }
+}

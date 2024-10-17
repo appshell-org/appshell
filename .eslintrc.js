@@ -55,6 +55,7 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint'],
   rules: {
+    'import/no-relative-packages': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'warn',
     'no-param-reassign': 'warn',

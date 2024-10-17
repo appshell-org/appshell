@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.5.0...@appshell/react-host@0.6.0-alpha.0) (2024-10-16)
+
+
+### Features
+
+* config init command, global apikey, registry args ([eef5c50](https://github.com/appshell-org/appshell/commit/eef5c503e7399537ec8956acd462b45060923aa1))
+
+
+
+
+
 # [0.5.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.4.2...@appshell/react-host@0.5.0) (2024-09-24)
 
 

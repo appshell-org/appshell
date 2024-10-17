@@ -3,7 +3,9 @@ const { compilerOptions } = require('./tsconfig');
 
 module.exports = {
   testRegex: '/__tests__/.+\\.spec\\.(js|tsx?)$',
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>' }),
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>',
+  }),
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   transform: {
     '^.+\\.jsx?$': 'babel-jest',
@@ -15,6 +17,6 @@ module.exports = {
     ],
   },
   testEnvironment: 'node',
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(yaml|chalk)/)'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(yaml|chalk|change-case)/)'],
   coverageReporters: ['text', 'cobertura'],
 };
