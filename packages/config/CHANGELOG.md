@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.2](https://github.com/navaris/appshell/compare/@appshell/config@0.8.0-alpha.1...@appshell/config@0.8.0-alpha.2) (2024-10-17)
+
+
+### Bug Fixes
+
+* force install commands ([c4a1b70](https://github.com/navaris/appshell/commit/c4a1b704482bac3246c1ab32f7613b6b27581382))
+
+
+
+
+
 # [0.8.0-alpha.1](https://github.com/navaris/appshell/compare/@appshell/config@0.8.0-alpha.0...@appshell/config@0.8.0-alpha.1) (2024-10-16)
 
 
