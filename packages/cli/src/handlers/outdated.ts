@@ -2,7 +2,7 @@
 import { outdated } from '@appshell/config';
 import chalk from 'chalk';
 import CliTable3 from 'cli-table3';
-import { first } from 'lodash';
+import { first, uniq } from 'lodash';
 import { ComparisonResult, ComparisonResults, SharedObject } from 'packages/config/src/types';
 import { groupByPackageName } from '../../../config/src/sync';
 import { fetchPackageSpec, fetchSnapshot } from '../util/fetch';
@@ -54,7 +54,7 @@ const badge = (status: string) => {
   }
 };
 
-const createTable = (results: ComparisonResult[]) => {
+const createModuleTable = (results: ComparisonResult[]) => {
   const sample = first(results)?.sampleModule;
   const baseline = first(results)?.baselineModule;
   const table = new CliTable3({
@@ -74,7 +74,7 @@ const createTable = (results: ComparisonResult[]) => {
   return table;
 };
 
-const printResults = (results: ComparisonResults) => {
+const printModuleResults = (results: ComparisonResults) => {
   const conflicts = groupByPackageName(results.conflicts);
   const missing = groupByPackageName(results.missing);
   const satisfied = groupByPackageName(results.satisfied);
@@ -94,12 +94,67 @@ const printResults = (results: ComparisonResults) => {
 
   // Display the results in a table
   Object.entries(groupedResults).forEach(([baselineModule, value]) => {
-    const table = createTable(value);
+    const table = createModuleTable(value);
 
     console.group(createHeading(baselineModule, value));
     console.log(table.toString());
     console.groupEnd();
   });
+};
+
+const createSummaryTable = (results: ComparisonResult[]) => {
+  const table = new CliTable3({
+    head: [
+      '',
+      chalk.white('Package'),
+      chalk.white('Source Module'),
+      chalk.white('Source Version'),
+      chalk.white('Baseline Module'),
+      chalk.white('Baseline Version'),
+    ],
+  });
+
+  results.forEach((result) => {
+    const colorFn = color(result.status);
+    table.push([
+      colorFn(badge(result.status)),
+      colorFn(result.packageName),
+      colorFn(result.sampleModule),
+      colorFn(result.sampleVersion),
+      colorFn(result.baselineModule),
+      colorFn(result.baselineVersion),
+    ]);
+  });
+
+  return table;
+};
+
+const printSummary = (results: ComparisonResults[]) => {
+  const conflicts = results
+    .flatMap((res) => Object.values(res.conflicts))
+    .sort((a, b) => {
+      if (a.packageName < b.packageName) {
+        return -1;
+      }
+      if (a.packageName > b.packageName) {
+        return 1;
+      }
+      return 0;
+    });
+  const packageCount = uniq(conflicts.map((c) => c.packageName)).length;
+  const moduleCount = uniq(conflicts.map((c) => c.baselineModule)).length;
+
+  console.log(
+    chalk.bold.red(
+      `\nSummary: ${packageCount} ${pluralize(
+        packageCount,
+        'package',
+        'packages',
+      )} out of sync across ${moduleCount} ${pluralize(moduleCount, 'module', 'modules')}`,
+    ),
+  );
+  const table = createSummaryTable(conflicts);
+  console.log(table.toString());
 };
 
 export default async (argv: OutdatedArgs) => {
@@ -118,12 +173,14 @@ export default async (argv: OutdatedArgs) => {
         shared: options.shared as SharedObject,
       });
 
-      printResults(results);
+      printModuleResults(results);
 
       return results;
     });
 
-    await Promise.all(jobs);
+    const results = await Promise.all(jobs);
+
+    printSummary(results);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
