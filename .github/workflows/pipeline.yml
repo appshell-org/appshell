@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main
-      - develop
       - 'feature/**'
       - 'fix/**'
   pull_request:
     branches:
       - main
-      - develop
+      - 'feature/**'
+      - 'fix/**'
 
 permissions:
   contents: write
@@ -45,7 +45,7 @@ jobs:
 
   publish_npm_packages:
     needs: build
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -80,7 +80,7 @@ jobs:
         run: npm ci
 
       - name: Version and tag pre-release
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: ${{ github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
         run: npx lerna version --no-push --conventional-prerelease --yes
 
       - name: Version and tag release
@@ -104,7 +104,7 @@ jobs:
   push_docker_images:
     name: Push Docker images to Docker Hub
     needs: publish_npm_packages
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
     runs-on: ubuntu-latest
 
     strategy:
