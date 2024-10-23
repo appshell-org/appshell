@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/navaris/appshell/compare/@appshell/cli@0.6.2...@appshell/cli@0.7.0) (2024-10-23)
+
+
+### Features
+
+* appshell cli api key support, init sync and outdated commands ([#6](https://github.com/navaris/appshell/issues/6)) ([acc5fa2](https://github.com/navaris/appshell/commit/acc5fa234f91a167038161d5080481c43f8eb8b4))
+
+
+
+
+
 # [0.7.0-alpha.2](https://github.com/navaris/appshell/compare/@appshell/cli@0.7.0-alpha.1...@appshell/cli@0.7.0-alpha.2) (2024-10-23)
 
 
