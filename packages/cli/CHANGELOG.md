@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.2](https://github.com/navaris/appshell/compare/@appshell/cli@0.7.0-alpha.1...@appshell/cli@0.7.0-alpha.2) (2024-10-23)
+
+
+### Bug Fixes
+
+* add recommended version column to outdated summary ([54fc96b](https://github.com/navaris/appshell/commit/54fc96bcd31e9aba2626215438354d85859cd59a))
+
+
+
+
+
 # [0.7.0-alpha.1](https://github.com/navaris/appshell/compare/@appshell/cli@0.7.0-alpha.0...@appshell/cli@0.7.0-alpha.1) (2024-10-17)
 
 
