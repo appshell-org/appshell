@@ -111,6 +111,7 @@ const createSummaryTable = (results: ComparisonResult[]) => {
       chalk.white('Source Version'),
       chalk.white('Baseline Module'),
       chalk.white('Baseline Version'),
+      chalk.white('Recommended Version'),
     ],
   });
 
@@ -123,6 +124,7 @@ const createSummaryTable = (results: ComparisonResult[]) => {
       colorFn(result.sampleVersion),
       colorFn(result.baselineModule),
       colorFn(result.baselineVersion),
+      `${result.packageName}@${result.baselineVersion}`,
     ]);
   });
 
