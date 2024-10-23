@@ -64,7 +64,7 @@ describe('service-worker', () => {
     expect(mockSelf.apiKey).toBe(apiKey);
   });
 
-  it('should add X-API-KEY header to fetch requests', async () => {
+  it('should add apikey header to fetch requests', async () => {
     jest
       .spyOn(global, 'Request')
       .mockImplementation((input: RequestInfo | URL | string, init?: RequestInit) => {
@@ -98,7 +98,7 @@ describe('service-worker', () => {
     expect(fetchSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         url: 'https://example.com',
-        headers: new Headers({ 'X-API-KEY': apiKey }),
+        headers: new Headers({ apikey: apiKey }),
         credentials: 'same-origin',
         mode: 'cors',
       }),

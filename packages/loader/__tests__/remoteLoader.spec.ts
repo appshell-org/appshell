@@ -1,6 +1,5 @@
 /** @jest-environment jsdom */
-import { AppshellManifest } from '@appshell/config';
-import { AppshellGlobalConfig } from '@appshell/config/src/types';
+import { AppshellGlobalConfig, AppshellManifest } from '@appshell/config';
 import fetch, { enableFetchMocks } from 'jest-fetch-mock';
 import * as fetchDynamicScript from '../src/fetchDynamicScript';
 import * as loadAppshellComponent from '../src/loadAppshellComponent';

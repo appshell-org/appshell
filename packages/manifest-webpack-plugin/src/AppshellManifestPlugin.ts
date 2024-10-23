@@ -1,7 +1,13 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
-import { AppshellConfig, Schema, utils, validators } from '@appshell/config';
-import { AppshellTemplate, ModuleFederationPluginOptions } from '@appshell/config/src/types';
+import {
+  AppshellConfig,
+  AppshellTemplate,
+  ModuleFederationPluginOptions,
+  Schema,
+  utils,
+  validators,
+} from '@appshell/config';
 import fs from 'fs';
 import hash_sum from 'hash-sum';
 import { entries, keys } from 'lodash';
