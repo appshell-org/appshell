@@ -54,7 +54,7 @@ export default async (argv: StartArgs): Promise<void> => {
     }
 
     const watchTemplate = exec(
-      `npm exec -- nodemon --watch ${templatePath} --exec "appshell generate manifest --template ${templatePath} && appshell register --manifest ${manifestPath} --registry ${registry} --allow-overrides ${allowOverrides}"`,
+      `npm exec -- nodemon --watch ${templatePath} --exec "appshell generate manifest --template ${templatePath} --out-dir=${outDir} && appshell register --manifest ${manifestPath} --registry ${registry} --allow-overrides ${allowOverrides}"`,
     );
     watchTemplate.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
@@ -64,7 +64,7 @@ export default async (argv: StartArgs): Promise<void> => {
 
   if (host) {
     const watchEnv = exec(
-      `npm exec -- nodemon --watch ${env} --exec "appshell generate env -e ${env} --overwrite --prefix ${envPrefix} --globalName ${envGlobalName}"`,
+      `npm exec -- nodemon --watch ${env} --exec "appshell generate env -e ${env} --out-dir=${outDir} --overwrite --prefix ${envPrefix} --globalName ${envGlobalName}"`,
     );
     watchEnv.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
