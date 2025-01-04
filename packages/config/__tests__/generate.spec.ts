@@ -164,7 +164,7 @@ describe('generate', () => {
 
       await generateGlobalConfig(remoteRegistries, { insecure: false });
 
-      expect(agentConstructorSpy).not.toHaveBeenCalled();
+      expect(agentConstructorSpy).toHaveBeenCalledWith({ rejectUnauthorized: true });
     });
   });
 });

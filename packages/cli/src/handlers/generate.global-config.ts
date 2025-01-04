@@ -8,10 +8,11 @@ export type GenerateGlobalConfigArgs = {
   validateRegistrySslCert: boolean;
   outDir: string;
   outFile: string;
+  apiKey: string | undefined;
 };
 
 export default async (argv: GenerateGlobalConfigArgs): Promise<void> => {
-  const { registry, validateRegistrySslCert, outDir, outFile } = argv;
+  const { registry, validateRegistrySslCert, outDir, outFile, apiKey } = argv;
   const registries = registry || [];
 
   if (registries.length < 1) {
@@ -20,11 +21,14 @@ export default async (argv: GenerateGlobalConfigArgs): Promise<void> => {
   }
 
   console.log(
-    `generating global appshell configuration --validate-registry-ssl-cert=${validateRegistrySslCert} --out-dir=${outDir} --out-file=${outFile} --registry=${registries}`,
+    `generating global appshell configuration --validate-registry-ssl-cert=${validateRegistrySslCert} --out-dir=${outDir} --out-file=${outFile} --registry=${registries} --apiKey=${!!apiKey}`,
   );
 
   try {
-    const config = await generateGlobalConfig(registries, { insecure: !validateRegistrySslCert });
+    const config = await generateGlobalConfig(registries, {
+      insecure: !validateRegistrySslCert,
+      apiKey,
+    });
 
     console.log(`global appshell configuration generated: ${JSON.stringify(config, null, 2)}`);
     if (!fs.existsSync(outDir)) {

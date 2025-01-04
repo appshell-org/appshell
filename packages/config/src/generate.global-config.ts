@@ -4,13 +4,14 @@ import { isValidUrl, merge } from './utils';
 import loadJson from './utils/loadJson';
 import { AppshellGlobalConfigValidator } from './validators';
 
-type GenerateGlobalConfigOptions = {
+export type GenerateGlobalConfigOptions = {
   insecure: boolean;
+  apiKey?: string;
 };
 
 export default async (
   registries: string[],
-  options: GenerateGlobalConfigOptions = { insecure: false },
+  options: GenerateGlobalConfigOptions = { insecure: false, apiKey: undefined },
 ): Promise<AppshellGlobalConfig> => {
   const defaultGlobalConfig = { index: {}, metadata: {}, overrides: { environment: {} } };
 
@@ -20,16 +21,22 @@ export default async (
   }
 
   console.log(
-    `generating global appshell configuration --registry=${JSON.stringify(registries, null, 2)}`,
+    `generating global appshell configuration --registry=${JSON.stringify(
+      registries,
+      null,
+      2,
+    )} --insecure=${options.insecure} --apiKey=${options.apiKey}`,
   );
 
   try {
     const configs = await Promise.all(
       registries.map((reg) => {
         const registry = isValidUrl(reg) ? `${reg}/appshell.config.json` : reg;
+        console.log(`Loading global configuration from ${registry}`);
         return loadJson<AppshellGlobalConfig>(registry, {
           insecure: options.insecure,
           target: /(.config.json)/i,
+          apiKey: options.apiKey,
         });
       }),
     ).then((items) => items.flat());

@@ -1,0 +1,34 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Registry",
+      "request": "launch",
+      "runtimeArgs": ["run-script", "start:registry"],
+      "runtimeExecutable": "npm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    },
+    {
+      "name": "Attach to CLI",
+      "type": "node",
+      "request": "attach",
+      "skipFiles": ["<node_internals>/**"],
+      "address": "localhost",
+      "port": 9240,
+      "localRoot": "${workspaceFolder}/packages/cli"
+    },
+    {
+      "name": "Attach to Registry",
+      "type": "node",
+      "request": "attach",
+      "skipFiles": ["<node_internals>/**"],
+      "address": "localhost",
+      "port": 9229,
+      "localRoot": "${workspaceFolder}"
+    }
+  ]
+}

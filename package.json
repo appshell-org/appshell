@@ -19,6 +19,7 @@
   "dependencies": {
     "@automapper/core": "8.7.7",
     "@automapper/pojos": "8.7.7",
+    "@nestjs/config": "^3.3.0",
     "axios": "1.4.0",
     "chalk": "4",
     "cli-table3": "^0.6.5",

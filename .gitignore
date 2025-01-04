@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules
-global-runtime-manifest/
+appshell_registry/
 
 # testing
 /coverage

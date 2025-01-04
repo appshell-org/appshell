@@ -20,10 +20,10 @@ export default async (
   allowOverrides = false,
 ) => {
   // eslint-disable-next-line no-console
-  console.log(`registering manifest to registry ${registryPathOrUrl}`);
+  console.log(`FOO registering manifest to registry ${registryPathOrUrl}`);
 
   if (isValidUrl(registryPathOrUrl)) {
-    await axios.post(registryPathOrUrl, manifest);
+    await axios.post(`${registryPathOrUrl}/register`, manifest);
 
     return;
   }
