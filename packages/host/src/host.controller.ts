@@ -117,7 +117,7 @@ export class HostController {
     res.json(config);
   }
 
-  @Get('*')
+  @Get('/')
   renderIndex(@Res() res: Response) {
     res.render('index', {
       favIcon: this.favIcon,

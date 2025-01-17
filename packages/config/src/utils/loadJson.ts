@@ -35,7 +35,7 @@ const loadJson = async <T = Record<string, unknown>>(
         return [resp.data];
       }
     } catch (err: any) {
-      console.log(inspect(err));
+      console.log(inspect(err.errors));
       throw new Error(`Failed to load file from ${jsonPathOrUrl}: ${err.message}`);
     }
   }

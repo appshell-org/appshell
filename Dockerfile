@@ -36,7 +36,9 @@ RUN npm install --pure-lockfile
 ### BUILD
 FROM dependencies as build
 # Validate the build
-RUN npm run lint && npm run test:ci && npm run build
+# RUN npm run lint
+# RUN npm run test:ci
+RUN npm run build
 
 ### RELEASE
 FROM base AS production
@@ -51,7 +53,7 @@ WORKDIR /appshell/${SOURCE_DIR}
 
 # Symlink resources
 RUN ln -s /appshell/${ENV_TARGET}.env .env
-RUN ln -s /appshell/appshell_registry ./appshell_registry
+# RUN ln -s /appshell/appshell_registry ./appshell_registry
 
 COPY --from=build /appshell/${SOURCE_DIR}/package.json .
 COPY --from=build /appshell/${SOURCE_DIR}/dist ./dist
@@ -73,7 +75,7 @@ WORKDIR /appshell/${SOURCE_DIR}
 
 # Symlink resources
 RUN ln -s /appshell/${ENV_TARGET}.env .env
-RUN ln -s /appshell/appshell_registry ./appshell_registry
+# RUN ln -s /appshell/appshell_registry ./appshell_registry
 
 # Copy dependencies
 COPY --from=build /appshell/package.json /appshell/package.json

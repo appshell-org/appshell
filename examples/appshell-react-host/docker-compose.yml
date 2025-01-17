@@ -34,4 +34,3 @@ services:
       - ./apps:/appshell/apps
       - ./node_modules:/appshell/node_modules
       - ./${ENV_TARGET}.env/:/appshell/${ENV_TARGET}.env
-      # - ./appshell_registry:/appshell/appshell_registry
