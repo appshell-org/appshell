@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/navaris/appshell/compare/@appshell/config@0.8.0...@appshell/config@0.8.1) (2025-01-30)
+
+
+### Bug Fixes
+
+* add api-key support for appshell host ([817481a](https://github.com/navaris/appshell/commit/817481a0b25bec1d0eec38d4d5771d5941cf2f3d))
+
+
+
+
+
 # [0.8.0](https://github.com/navaris/appshell/compare/@appshell/config@0.7.0...@appshell/config@0.8.0) (2024-10-23)
 
 
