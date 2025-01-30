@@ -6,12 +6,12 @@ import * as validators from './validators';
 
 const updateDocument = (file: string, data: object, validator: ConfigValidator) => {
   if (!fs.existsSync(file)) {
-    fs.writeFileSync(file, JSON.stringify(data));
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
     return;
   }
 
   const doc = JSON.parse(fs.readFileSync(file, 'utf-8'));
-  fs.writeFileSync(file, JSON.stringify(merge(validator, doc, data)));
+  fs.writeFileSync(file, JSON.stringify(merge(validator, doc, data), null, 2));
 };
 
 export default async (

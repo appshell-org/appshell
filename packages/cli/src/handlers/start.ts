@@ -1,4 +1,5 @@
 import { utils } from '@appshell/config';
+import chalk from 'chalk';
 import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
@@ -61,9 +62,13 @@ export default async (argv: StartArgs): Promise<void> => {
     const watchTemplate = exec(
       `npm exec -- nodemon --watch ${templatePath} --exec "appshell generate manifest --template ${templatePath} && appshell register --manifest ${manifestPath} --registry ${registry} --allow-overrides ${allowOverrides}"`,
     );
+    watchTemplate.stderr?.on('data', (data) => {
+      // eslint-disable-next-line no-console
+      console.error(chalk.red(`[${prefix}] ${data}`));
+    });
     watchTemplate.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix}: ${data}`);
+      console.log(chalk.cyan(`[${prefix}] ${data}`));
     });
   }
 
@@ -71,9 +76,13 @@ export default async (argv: StartArgs): Promise<void> => {
     const watchEnv = exec(
       `npm exec -- nodemon --watch ${env} --exec "appshell generate env -e ${env} --overwrite --prefix ${envPrefix} --globalName ${envGlobalName}"`,
     );
+    watchEnv.stderr?.on('data', (data) => {
+      // eslint-disable-next-line no-console
+      console.error(chalk.red(`[${prefix}] ${data}`));
+    });
     watchEnv.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix}: ${data}`);
+      console.log(chalk.cyan(`[${prefix}] ${data}`));
     });
 
     if (!fs.existsSync(registry)) {
@@ -82,9 +91,13 @@ export default async (argv: StartArgs): Promise<void> => {
     const watchRegistry = exec(
       `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert} --api-key=${apiKey} --out-dir=${registry}"`,
     );
+    watchRegistry.stderr?.on('data', (data) => {
+      // eslint-disable-next-line no-console
+      console.error(chalk.red(`[${prefix}] ${data}`));
+    });
     watchRegistry.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix}: ${data}`);
+      console.log(chalk.cyan(`[${prefix}] ${data}`));
     });
   }
 };

@@ -24,7 +24,7 @@ ENV APPSHELL_SERVICE_WORKER_URL=${APPSHELL_SERVICE_WORKER_URL:-'/appshell-servic
 # Expose application port
 EXPOSE ${APPSHELL_PORT}
 
-CMD ${APPSHELL_CONTAINER_COMMAND}
+CMD ln -sf /appshell/${ENV_TARGET}.env .env && ln -sf /appshell/appshell_registry . && ${APPSHELL_CONTAINER_COMMAND}
 
 ### DEPENDENCIES
 FROM base AS dependencies
@@ -49,10 +49,6 @@ RUN npm install -g dotenv-cli
 
 WORKDIR /appshell/${SOURCE_DIR}
 
-# Symlink resources
-RUN ln -s /appshell/${ENV_TARGET}.env .env
-RUN ln -s /appshell/appshell_registry ./appshell_registry
-
 COPY --from=build /appshell/${SOURCE_DIR}/package.json .
 COPY --from=build /appshell/${SOURCE_DIR}/dist ./dist
 
@@ -70,10 +66,6 @@ ENV SOURCE_DIR=${SOURCE_DIR}
 ENV APPSHELL_CONTAINER_COMMAND=${APPSHELL_CONTAINER_COMMAND:-'npm run serve:developer'}
 
 WORKDIR /appshell/${SOURCE_DIR}
-
-# Symlink resources
-RUN ln -s /appshell/${ENV_TARGET}.env .env
-RUN ln -s /appshell/appshell_registry ./appshell_registry
 
 # Copy dependencies
 COPY --from=build /appshell/package.json /appshell/package.json
