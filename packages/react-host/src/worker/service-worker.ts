@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { headersToObject, isExternalDomain } from './util';
+import { headersToObject, isDevelopment, isExternalDomain } from './util';
 
 export type {};
 declare const self: ServiceWorkerGlobalScope & { apiKey: string };
@@ -30,7 +30,8 @@ export const handleFetchEvent = (event: FetchEvent) => {
   const requestUrl = event.request.url;
 
   // eslint-disable-next-line no-restricted-globals
-  if (!isExternalDomain(requestUrl, location.origin)) {
+  if (!isExternalDomain(requestUrl, location.origin) || isDevelopment(location.origin)) {
+    console.debug(`Proxying ${requestUrl}`);
     event.respondWith(
       fetch(
         new Request(event.request, {

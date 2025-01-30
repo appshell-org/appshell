@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import { AppshellManifest } from '../src/types';
-import { merge } from '../src/utils';
+import { blur, merge } from '../src/utils';
 import copy from '../src/utils/copy';
 import load from '../src/utils/load';
 import validator from '../src/validators/AppshellManifestValidator';
@@ -18,6 +18,14 @@ import fooManifest from './assets/appshell_utils/testmodule-foo.json';
 
 describe('utils', () => {
   const packageName = 'config';
+
+  describe('blur', () => {
+    it('should return a blurred value', () => {
+      const token = 'test-token';
+
+      expect(blur(token)).toBe('test-...token');
+    });
+  });
 
   describe('load', () => {
     describe('consuming the configuration', () => {

@@ -1,6 +1,11 @@
 import { enableFetchMocks } from 'jest-fetch-mock';
 import { mockDeep } from 'jest-mock-extended';
-import { getBaseDomain, headersToObject, isExternalDomain } from '../src/worker/util';
+import {
+  getBaseDomain,
+  headersToObject,
+  isDevelopment,
+  isExternalDomain,
+} from '../src/worker/util';
 
 enableFetchMocks();
 
@@ -48,6 +53,32 @@ describe('service-worker utls', () => {
       const requestUrl = 'https://sub.example.com/path/to/resource';
 
       const result = isExternalDomain(requestUrl, workerLocation.origin);
+
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('isDevelopment', () => {
+    it('should return false if the origin was other than localhost', () => {
+      const originUrl = 'https://www.non-local-domain.com/path/to/resource';
+
+      const result = isDevelopment(originUrl);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return true if the origin is localhost', () => {
+      const originUrl = 'https://localhost:3001/path/to/resource';
+
+      const result = isDevelopment(originUrl);
+
+      expect(result).toBe(true);
+    });
+
+    it('should return true if the origin is a subdomain of localhost', () => {
+      const originUrl = 'https://sub.localhost:3001/path/to/resource';
+
+      const result = isDevelopment(originUrl);
 
       expect(result).toBe(false);
     });

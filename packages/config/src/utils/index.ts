@@ -1,3 +1,4 @@
+export { default as blur } from './blur';
 export {
   compareDependencies,
   compareDependency,

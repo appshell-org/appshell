@@ -6,6 +6,7 @@ import { AppshellGlobalConfigValidator } from './validators';
 
 type GenerateGlobalConfigOptions = {
   insecure: boolean;
+  apiKey?: string;
 };
 
 export default async (
@@ -25,14 +26,18 @@ export default async (
 
   try {
     const configs = await Promise.all(
-      registries.map((reg) => {
+      registries.map(async (reg) => {
         const registry = isValidUrl(reg) ? `${reg}/appshell.config.json` : reg;
-        return loadJson<AppshellGlobalConfig>(registry, {
+        console.debug(`Getting config from ${registry}`);
+        const config = await loadJson<AppshellGlobalConfig>(registry, {
           insecure: options.insecure,
           target: /(.config.json)/i,
+          apiKey: options.apiKey,
         });
+        return config;
       }),
     ).then((items) => items.flat());
+
     console.log(
       `Generating global configuration from ${configs.length} source${
         configs.length === 1 ? '' : 's'
