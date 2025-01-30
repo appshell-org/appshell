@@ -20,3 +20,8 @@ export const headersToObject = (headers: Headers) => {
   });
   return obj;
 };
+
+export const isDevelopment = (origin: string): boolean => {
+  const referrerBaseDomain = getBaseDomain(origin);
+  return referrerBaseDomain === 'localhost';
+};

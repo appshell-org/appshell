@@ -1,8 +1,10 @@
+import { utils } from '@appshell/config';
 import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
 export type StartArgs = {
+  apiKey: string;
   outDir: string;
   env: string;
   envPrefix: string;
@@ -20,6 +22,7 @@ export type StartArgs = {
 
 export default async (argv: StartArgs): Promise<void> => {
   const {
+    apiKey,
     env,
     envGlobalName,
     envPrefix,
@@ -37,7 +40,9 @@ export default async (argv: StartArgs): Promise<void> => {
 
   // eslint-disable-next-line no-console
   console.log(
-    `starting appshell --env=${env} --env-prefix=${envPrefix} --env-global-name=${envGlobalName} --out-dir=${outDir} --remote=${remote} --host=${host} --allow-overrides=${allowOverrides} --validate-registry-ssl-cert=${validateRegistrySslCert} --metadata=${metadata} --manifest=${manifest} --manifest-template=${manifestTemplate} --registry=${registry} --base-registry=${baseRegistry}`,
+    `starting appshell --env=${env} --env-prefix=${envPrefix} --env-global-name=${envGlobalName} --out-dir=${outDir} --remote=${remote} --host=${host} --allow-overrides=${allowOverrides} --validate-registry-ssl-cert=${validateRegistrySslCert} --metadata=${metadata} --manifest=${manifest} --manifest-template=${manifestTemplate} --registry=${registry} --base-registry=${baseRegistry} --api-key=${utils.blur(
+      apiKey,
+    )}`,
   );
 
   const prefix = 'appshell';
@@ -58,7 +63,7 @@ export default async (argv: StartArgs): Promise<void> => {
     );
     watchTemplate.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix}: ${data}`);
+      console.log(`${prefix} template: ${data}`);
     });
   }
 
@@ -68,18 +73,18 @@ export default async (argv: StartArgs): Promise<void> => {
     );
     watchEnv.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix}: ${data}`);
+      console.log(`${prefix} env: ${data}`);
     });
 
     if (!fs.existsSync(registry)) {
       fs.mkdirSync(registry);
     }
     const watchRegistry = exec(
-      `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert} && if [ -d ./appshell_registry ]; then cp -R ${registry}/* ${outDir}; fi"`,
+      `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert} --api-key=${apiKey} --out-dir=${registry}"`,
     );
     watchRegistry.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix}: ${data}`);
+      console.log(`${prefix} registry: ${data}`);
     });
   }
 };
