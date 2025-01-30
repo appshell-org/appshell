@@ -63,7 +63,7 @@ export default async (argv: StartArgs): Promise<void> => {
     );
     watchTemplate.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix} template: ${data}`);
+      console.log(`${prefix}: ${data}`);
     });
   }
 
@@ -73,7 +73,7 @@ export default async (argv: StartArgs): Promise<void> => {
     );
     watchEnv.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix} env: ${data}`);
+      console.log(`${prefix}: ${data}`);
     });
 
     if (!fs.existsSync(registry)) {
@@ -84,7 +84,7 @@ export default async (argv: StartArgs): Promise<void> => {
     );
     watchRegistry.stdout?.on('data', (data) => {
       // eslint-disable-next-line no-console
-      console.log(`${prefix} registry: ${data}`);
+      console.log(`${prefix}: ${data}`);
     });
   }
 };
