@@ -27,6 +27,10 @@ if (isDevelopment) {
   app.use(webpackHotMiddleware(compiler));
 }
 
+// Serve static files from the 'registry' directory
+const registry = process.env.APPSHELL_REGISTRY || './appshell_registry';
+console.log(`Serve static from ${registry}`);
+app.use(express.static(registry));
 // Serve static files from the 'dist' directory
 app.use(express.static(__dirname));
 

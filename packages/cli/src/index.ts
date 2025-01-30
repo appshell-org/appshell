@@ -405,4 +405,13 @@ yargs(hideBin(process.argv))
   .command(registerManifestCommand)
   .command(deregisterManifestCommand)
   .command(startCommand)
+  .fail((msg, err) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.error(msg);
+    }
+    console.error('You can use --help to see available options');
+    process.exit(1);
+  })
   .parse();

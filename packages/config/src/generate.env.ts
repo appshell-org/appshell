@@ -33,6 +33,6 @@ export default async (env: string, prefix = '', overwrite = false) =>
         resolve(map);
       });
     } else {
-      reject(new Error(`${env} not found.`));
+      reject(new Error(`${dotenvPath} not found.`));
     }
   });

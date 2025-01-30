@@ -171,12 +171,12 @@ describe('deregister', () => {
 
     expect(writeFileSyncSpy).toHaveBeenCalledWith(
       `${registryDir}/appshell.config.json`,
-      JSON.stringify(expectedGlobalConfig),
+      JSON.stringify(expectedGlobalConfig, null, 2),
     );
 
     expect(writeFileSyncSpy).toHaveBeenCalledWith(
       `${registryDir}/appshell.snapshot.json`,
-      JSON.stringify(expectedSnapshot),
+      JSON.stringify(expectedSnapshot, null, 2),
     );
   });
 

@@ -79,7 +79,7 @@ const updateGlobalConfig = (registry: string, targetModule: string) => {
 
   validators.AppshellGlobalConfigValidator.validate(doc);
 
-  fs.writeFileSync(file, JSON.stringify(doc));
+  fs.writeFileSync(file, JSON.stringify(doc, null, 2));
 };
 
 const updateSnapshot = (registry: string, targetModule: string) => {
@@ -95,7 +95,7 @@ const updateSnapshot = (registry: string, targetModule: string) => {
 
   validators.AppshellManifestValidator.validate(doc);
 
-  fs.writeFileSync(file, JSON.stringify(doc));
+  fs.writeFileSync(file, JSON.stringify(doc, null, 2));
 };
 
 export default async (moduleName: string, registry: string) => {
