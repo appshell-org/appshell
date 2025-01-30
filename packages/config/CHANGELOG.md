@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.2](https://github.com/navaris/appshell/compare/@appshell/config@0.8.1...@appshell/config@0.8.2) (2025-01-30)
+
+
+### Bug Fixes
+
+* serve registry docs, update cli error reporting ([7338810](https://github.com/navaris/appshell/commit/73388109620c8ec83110b3b60063290214221a59))
+
+
+
+
+
 ## [0.8.1](https://github.com/navaris/appshell/compare/@appshell/config@0.8.0...@appshell/config@0.8.1) (2025-01-30)
 
 
