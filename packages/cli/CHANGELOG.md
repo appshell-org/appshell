@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/navaris/appshell/compare/@appshell/cli@0.7.2...@appshell/cli@0.8.0) (2025-02-07)
+
+
+### Features
+
+* support for proxying appshell calls ([ead8ff9](https://github.com/navaris/appshell/commit/ead8ff9024426a79a898de07adb587da74e0ba9c))
+
+
+
+
+
 ## [0.7.2](https://github.com/navaris/appshell/compare/@appshell/cli@0.7.1...@appshell/cli@0.7.2) (2025-01-30)
 
 

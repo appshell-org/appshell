@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.6.2...@appshell/react-host@0.7.0) (2025-02-07)
+
+
+### Features
+
+* support for proxying appshell calls ([ead8ff9](https://github.com/appshell-org/appshell/commit/ead8ff9024426a79a898de07adb587da74e0ba9c))
+
+
+
+
+
 ## [0.6.2](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.6.1...@appshell/react-host@0.6.2) (2025-01-30)
 
 
