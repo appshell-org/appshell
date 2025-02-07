@@ -38,8 +38,8 @@ app.engine('.html', ejs.renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
-app.get('/api-key', (req, res) => {
-  res.json({ apiKey: process.env.APPSHELL_API_KEY });
+app.get('/service-worker-config', (req, res) => {
+  res.json({ apiKey: process.env.APPSHELL_API_KEY, proxyUrl: process.env.APPSHELL_PROXY_URL });
 });
 
 app.get('*', (req, res) => {

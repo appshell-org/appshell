@@ -7,7 +7,6 @@ services:
       args:
         SOURCE_DIR: packages/react-host
     env_file: './${ENV_TARGET}.env'
-    command: ${CONTAINER_COMMAND}
     deploy:
       mode: replicated
       replicas: ${CONTAINER_SCALE}

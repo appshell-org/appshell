@@ -17,6 +17,7 @@ export type StartArgs = {
   metadata: boolean;
   manifestTemplate: string;
   manifest: string;
+  proxyUrl: string;
   registry: string;
   baseRegistry: string[];
 };
@@ -35,16 +36,18 @@ export default async (argv: StartArgs): Promise<void> => {
     metadata,
     manifest,
     manifestTemplate,
+    proxyUrl,
     registry,
     baseRegistry,
   } = argv;
 
   // eslint-disable-next-line no-console
   console.log(
-    `starting appshell --env=${env} --env-prefix=${envPrefix} --env-global-name=${envGlobalName} --out-dir=${outDir} --remote=${remote} --host=${host} --allow-overrides=${allowOverrides} --validate-registry-ssl-cert=${validateRegistrySslCert} --metadata=${metadata} --manifest=${manifest} --manifest-template=${manifestTemplate} --registry=${registry} --base-registry=${baseRegistry} --api-key=${utils.blur(
+    `starting appshell --env=${env} --env-prefix=${envPrefix} --env-global-name=${envGlobalName} --out-dir=${outDir} --remote=${remote} --host=${host} --allow-overrides=${allowOverrides} --validate-registry-ssl-cert=${validateRegistrySslCert} --metadata=${metadata} --manifest=${manifest} --manifest-template=${manifestTemplate} --registry=${registry} --base-registry=${baseRegistry} --proxy-url=${proxyUrl} --api-key=${utils.blur(
       apiKey,
     )}`,
   );
+  console.log(`start: proxyUrl ${proxyUrl}`);
 
   const prefix = 'appshell';
   const sources = baseRegistry.concat(registry).join(' ');
@@ -89,7 +92,7 @@ export default async (argv: StartArgs): Promise<void> => {
       fs.mkdirSync(registry);
     }
     const watchRegistry = exec(
-      `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert} --api-key=${apiKey} --out-dir=${registry}"`,
+      `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert} --api-key ${apiKey} --proxy-url ${proxyUrl} --out-dir ${registry}"`,
     );
     watchRegistry.stderr?.on('data', (data) => {
       // eslint-disable-next-line no-console

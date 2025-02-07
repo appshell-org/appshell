@@ -15,5 +15,5 @@
     "skipLibCheck": true,
     "sourceMap": false
   },
-  "include": ["./src/worker.ts"]
+  "include": ["./src/worker"]
 }

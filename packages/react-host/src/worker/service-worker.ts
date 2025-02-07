@@ -1,10 +1,15 @@
+/// <reference lib="webworker" />
+
 /* eslint-disable no-console */
-import { headersToObject, isDevelopment, isExternalDomain } from './util';
+import { isExternalDomain } from './util';
 
 export type {};
-declare const self: ServiceWorkerGlobalScope & { apiKey: string };
+declare const self: ServiceWorkerGlobalScope & { apiKey: string; proxyUrl: string };
 
-export const handleInstallEvent = (event: InstallEvent) => {
+const bodyForbidden = (method: string) => /^(get|GET|head|HEAD)$/.test(method);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const handleInstallEvent = (event: any /** InstallEvent */) => {
   console.debug('Service Worker installing.');
   event.waitUntil(self.skipWaiting());
 };
@@ -14,15 +19,54 @@ export const handleActivateEvent = () => {
 };
 
 export const handleMessageEvent = (event: ExtendableMessageEvent) => {
-  if (event.data && event.data.type === 'apiKey') {
-    const { apiKey } = event.data;
+  if (event.data && event.data.type === 'config') {
+    const { apiKey, proxyUrl } = event.data.config;
     const chars = 5;
     console.debug(
-      'Service Worker received new auth token:',
-      `${apiKey.slice(0, chars)}...${apiKey.slice(-chars)}`,
+      'Service Worker received API key:',
+      apiKey ? `${apiKey.slice(0, chars)}...${apiKey.slice(-chars)}` : undefined,
     );
+    console.debug(`Service Worker received proxy url`, proxyUrl);
 
     self.apiKey = apiKey;
+    self.proxyUrl = proxyUrl;
+  }
+};
+
+export const proxyCall = async (request: Request) => {
+  const requestUrl = request.url;
+  const body = await request.clone().text(); // Clone and read the body
+  const headers = new Headers({ ...Object.fromEntries(request.headers.entries()) });
+  if (self.apiKey) {
+    headers.append('apikey', self.apiKey);
+  }
+  const requestInit = {
+    method: request.method,
+    headers,
+    mode: request.mode,
+    credentials: request.credentials,
+    cache: request.cache,
+    redirect: request.redirect,
+    referrer: request.referrer,
+    referrerPolicy: request.referrerPolicy,
+    integrity: request.integrity,
+  };
+  const newRequest = new Request(
+    `${self.proxyUrl}?target=${requestUrl}`,
+    bodyForbidden(request.method)
+      ? requestInit
+      : {
+          ...requestInit,
+          body,
+        },
+  );
+
+  try {
+    return await fetch(newRequest);
+  } catch (error) {
+    console.warn('Failed to fetch resource:', requestUrl);
+    console.error(error);
+    return new Response('An error occurred', { status: 500 });
   }
 };
 
@@ -30,26 +74,9 @@ export const handleFetchEvent = (event: FetchEvent) => {
   const requestUrl = event.request.url;
 
   // eslint-disable-next-line no-restricted-globals
-  if (!isExternalDomain(requestUrl, location.origin) || isDevelopment(location.origin)) {
-    console.debug(`Proxying ${requestUrl}`);
-    event.respondWith(
-      fetch(
-        new Request(event.request, {
-          mode: 'cors',
-          credentials: 'same-origin',
-          headers: new Headers({
-            ...headersToObject(event.request.headers),
-            apikey: self.apiKey,
-          }),
-        }),
-      )
-        .then((response) => response)
-        .catch((error) => {
-          console.warn('Failed to fetch resource:', requestUrl);
-          console.error(error);
-          return new Response('An error occurred', { status: 500 });
-        }) as Promise<Response>,
-    );
+  if (isExternalDomain(requestUrl, location.origin)) {
+    console.debug(`Proxying ${requestUrl} to ${self.proxyUrl}`);
+    event.respondWith(proxyCall(event.request));
   }
 };
 
