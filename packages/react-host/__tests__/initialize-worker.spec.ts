@@ -85,33 +85,41 @@ describe('initialize-worker', () => {
     });
   });
 
-  describe('fetchApiKey', () => {
+  describe('fetchServiceWorkerConfig', () => {
     beforeEach(() => {
       jest.resetModules();
     });
 
     it('should fetch the API key successfully', async () => {
-      const { fetchApiKey } = require('../src/worker/initialize');
+      const { fetchServiceWorkerConfig } = require('../src/worker/initialize');
       const mockResponse = mockDeep<Response>({
         ok: true,
-        json: jest.fn().mockResolvedValue({ apiKey: 'test-api-key' }),
+        json: jest.fn().mockResolvedValue({
+          apiKey: 'test-api-key',
+          proxyUrl: 'http://my-proxy-domain/proxy',
+        }),
       });
       jest.spyOn(global, 'fetch').mockResolvedValue(mockResponse);
 
-      const apiKey = await fetchApiKey();
+      const config = await fetchServiceWorkerConfig();
 
-      expect(global.fetch).toHaveBeenCalledWith('/api-key');
-      expect(apiKey).toBe('test-api-key');
+      expect(global.fetch).toHaveBeenCalledWith('/service-worker-config');
+      expect(config).toMatchObject({
+        apiKey: 'test-api-key',
+        proxyUrl: 'http://my-proxy-domain/proxy',
+      });
     });
 
     it('should throw an error if fetching the API key fails', async () => {
-      const { fetchApiKey } = require('../src/worker/initialize');
+      const { fetchServiceWorkerConfig } = require('../src/worker/initialize');
       const mockResponse = mockDeep<Response>({
         ok: false,
       });
       jest.spyOn(global, 'fetch').mockResolvedValue(mockResponse);
 
-      await expect(fetchApiKey()).rejects.toThrow('Failed to fetch API key');
+      await expect(fetchServiceWorkerConfig()).rejects.toThrow(
+        'Failed to fetch service worker config',
+      );
     });
   });
 
@@ -155,35 +163,43 @@ describe('initialize-worker', () => {
       const unregisterAppshellServiceWorkerSpy = jest
         .spyOn(initModule, 'unregisterAppshellServiceWorker')
         .mockResolvedValue(undefined);
-      const fetchApiKeySpy = jest.spyOn(initModule, 'fetchApiKey').mockResolvedValue(undefined);
+      const fetchServiceWorkerConfigSpy = jest
+        .spyOn(initModule, 'fetchServiceWorkerConfig')
+        .mockResolvedValue(undefined);
 
       await initializeAppshellServiceWorker();
 
-      expect(consoleLogSpy).toHaveBeenCalledWith('Appshell API key not configured.');
+      expect(consoleLogSpy).toHaveBeenCalledWith('Appshell Service Worker not configured.');
       expect(unregisterAppshellServiceWorkerSpy).toHaveBeenCalledWith('worker.js');
-      expect(fetchApiKeySpy).toHaveBeenCalled();
+      expect(fetchServiceWorkerConfigSpy).toHaveBeenCalled();
     });
 
     it('should register the Appshell Service Worker and send the API key', async () => {
       const initModule = require('../src/worker/initialize');
       const { initializeAppshellServiceWorker } = initModule;
       const consoleLogSpy = jest.spyOn(console, 'debug');
-      const fetchApiKeySpy = jest
-        .spyOn(initModule, 'fetchApiKey')
-        .mockResolvedValue('test-api-key');
+      const fetchServiceWorkerConfigSpy = jest
+        .spyOn(initModule, 'fetchServiceWorkerConfig')
+        .mockResolvedValue({
+          apiKey: 'test-api-key',
+          proxyUrl: 'http://my-proxy-domain/proxy',
+        });
       const registerSpy = jest.spyOn(navigator.serviceWorker, 'register');
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const postMessageSpy = jest.spyOn(navigator.serviceWorker.controller!, 'postMessage');
 
       await initializeAppshellServiceWorker();
 
-      expect(fetchApiKeySpy).toHaveBeenCalled();
+      expect(fetchServiceWorkerConfigSpy).toHaveBeenCalled();
       expect(consoleLogSpy).toHaveBeenCalledWith('Registering Appshell Service Worker worker.js');
       expect(registerSpy).toHaveBeenCalledWith('worker.js');
       expect(consoleLogSpy).toHaveBeenCalledWith('Appshell Service Worker Registered');
       expect(postMessageSpy).toHaveBeenCalledWith({
-        type: 'apiKey',
-        apiKey: 'test-api-key',
+        type: 'config',
+        config: {
+          apiKey: 'test-api-key',
+          proxyUrl: 'http://my-proxy-domain/proxy',
+        },
       });
     });
 
@@ -191,7 +207,7 @@ describe('initialize-worker', () => {
       const initModule = require('../src/worker/initialize');
       const { initializeAppshellServiceWorker } = initModule;
       const consoleErrorSpy = jest.spyOn(console, 'error');
-      jest.spyOn(initModule, 'fetchApiKey').mockRejectedValue(new Error('Test error'));
+      jest.spyOn(initModule, 'fetchServiceWorkerConfig').mockRejectedValue(new Error('Test error'));
 
       await initializeAppshellServiceWorker();
 

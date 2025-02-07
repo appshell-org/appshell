@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { inspect } from 'util';
 import { AppshellGlobalConfig } from './types';
 import { isValidUrl, merge } from './utils';
 import loadJson from './utils/loadJson';
@@ -7,6 +8,7 @@ import { AppshellGlobalConfigValidator } from './validators';
 type GenerateGlobalConfigOptions = {
   insecure: boolean;
   apiKey?: string;
+  proxyUrl?: string;
 };
 
 export default async (
@@ -33,6 +35,7 @@ export default async (
           insecure: options.insecure,
           target: /(.config.json)/i,
           apiKey: options.apiKey,
+          proxyUrl: options.proxyUrl,
         });
         return config;
       }),
@@ -49,6 +52,7 @@ export default async (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error('Error generating global appshell configuration', err.message);
+    console.log(inspect(err));
   }
 
   return defaultGlobalConfig;

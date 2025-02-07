@@ -187,6 +187,13 @@ const generateGlobalConfigCommand: yargs.CommandModule<unknown, GenerateGlobalCo
         description:
           "If false, registry files are fetched without validating the registry's SSL cert",
       })
+      .option('proxyUrl', {
+        alias: 'p',
+        default: process.env.APPSHELL_PROXY_URL || '',
+        type: 'string',
+        description: 'Proxy url for calls to get external resources',
+        global: true,
+      })
       .option('registry', {
         string: true,
         type: 'array',

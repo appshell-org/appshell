@@ -22,15 +22,23 @@ export const unregisterAppshellServiceWorker = async (workerUrl: string) => {
   );
 };
 
-export const fetchApiKey = async () => {
-  const response = await fetch('/api-key');
+export const fetchServiceWorkerConfig = async () => {
+  const response = await fetch('/service-worker-config');
   if (response.ok) {
-    const { apiKey } = await response.json();
+    const { apiKey, proxyUrl } = await response.json();
 
-    return apiKey;
+    const url = new URL(proxyUrl);
+    if (/^host.docker.internal/.test(url.hostname)) {
+      console.debug(
+        `Appshell Service Worker replacing configured hostname ${url.hostname} with localhost`,
+      );
+      url.hostname = 'localhost';
+    }
+
+    return { apiKey, proxyUrl: url.toString() };
   }
 
-  throw new Error('Failed to fetch API key');
+  throw new Error('Failed to fetch service worker config');
 };
 
 export const initializeAppshellServiceWorker = async () => {
@@ -44,10 +52,10 @@ export const initializeAppshellServiceWorker = async () => {
   }
 
   try {
-    const apiKey = await fetchApiKey();
+    const config = await fetchServiceWorkerConfig();
 
-    if (!apiKey) {
-      console.debug('Appshell API key not configured.');
+    if (!config) {
+      console.debug('Appshell Service Worker not configured.');
 
       await unregisterAppshellServiceWorker(workerUrl);
       return;
@@ -58,8 +66,8 @@ export const initializeAppshellServiceWorker = async () => {
 
     console.debug('Appshell Service Worker Registered');
     navigator.serviceWorker.controller?.postMessage({
-      type: 'apiKey',
-      apiKey,
+      type: 'config',
+      config,
     });
   } catch (error) {
     console.error(error);
