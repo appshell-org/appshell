@@ -13,6 +13,7 @@ const mockConflicts = (conflicts: Record<string, ComparisonResult>) =>
 
 describe('cli sync', () => {
   const apiKey = 'test-api-key';
+  const apiKeyHeader = 'test-api-key-header';
 
   let fetchPackageSpecSpy: jest.SpyInstance;
   let fetchSnapshotSpy: jest.SpyInstance;
@@ -63,6 +64,7 @@ describe('cli sync', () => {
 
     await handler({
       apiKey,
+      apiKeyHeader,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -70,7 +72,7 @@ describe('cli sync', () => {
       dryRun: false,
     });
 
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey, apiKeyHeader);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       `Error analyzing outdated shared dependencies`,
       errorMessage,
@@ -85,6 +87,7 @@ describe('cli sync', () => {
 
     await handler({
       apiKey,
+      apiKeyHeader,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -94,8 +97,8 @@ describe('cli sync', () => {
 
     expect(syncSpy).toHaveBeenCalled();
     expect(config.outdated).toHaveBeenCalledTimes(modulesToCheck);
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
-    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey, apiKeyHeader);
+    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey, apiKeyHeader);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
@@ -107,6 +110,7 @@ describe('cli sync', () => {
 
     await handler({
       apiKey,
+      apiKeyHeader,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -116,8 +120,8 @@ describe('cli sync', () => {
 
     expect(syncSpy).toHaveBeenCalled();
     expect(config.outdated).toHaveBeenCalledTimes(modulesToCheck);
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
-    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey, apiKeyHeader);
+    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey, apiKeyHeader);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
@@ -128,6 +132,7 @@ describe('cli sync', () => {
 
     await handler({
       apiKey,
+      apiKeyHeader,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -148,6 +153,7 @@ describe('cli sync', () => {
 
     await handler({
       apiKey,
+      apiKeyHeader,
       workingDir,
       registry,
       packageManager: 'npm',
@@ -180,6 +186,7 @@ describe('cli sync', () => {
 
     await handler({
       apiKey,
+      apiKeyHeader,
       workingDir,
       registry,
       packageManager: 'npm',

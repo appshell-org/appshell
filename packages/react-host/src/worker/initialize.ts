@@ -25,7 +25,7 @@ export const unregisterAppshellServiceWorker = async (workerUrl: string) => {
 export const fetchServiceWorkerConfig = async () => {
   const response = await fetch('/service-worker-config');
   if (response.ok) {
-    const { apiKey, proxyUrl } = await response.json();
+    const { apiKey, apiKeyHeader, proxyUrl } = await response.json();
 
     const url = new URL(proxyUrl);
     if (/^host.docker.internal/.test(url.hostname)) {
@@ -35,7 +35,7 @@ export const fetchServiceWorkerConfig = async () => {
       url.hostname = 'localhost';
     }
 
-    return { apiKey, proxyUrl: url.toString() };
+    return { apiKey, apiKeyHeader, proxyUrl: url.toString() };
   }
 
   throw new Error('Failed to fetch service worker config');

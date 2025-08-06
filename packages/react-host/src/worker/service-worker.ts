@@ -4,7 +4,11 @@
 import { isExternalDomain } from './util';
 
 export type {};
-declare const self: ServiceWorkerGlobalScope & { apiKey: string; proxyUrl: string };
+declare const self: ServiceWorkerGlobalScope & {
+  apiKey: string;
+  apiKeyHeader: string;
+  proxyUrl: string;
+};
 
 const bodyForbidden = (method: string) => /^(get|GET|head|HEAD)$/.test(method);
 
@@ -20,15 +24,17 @@ export const handleActivateEvent = () => {
 
 export const handleMessageEvent = (event: ExtendableMessageEvent) => {
   if (event.data && event.data.type === 'config') {
-    const { apiKey, proxyUrl } = event.data.config;
+    const { apiKey, apiKeyHeader, proxyUrl } = event.data.config;
     const chars = 5;
     console.debug(
       'Service Worker received API key:',
       apiKey ? `${apiKey.slice(0, chars)}...${apiKey.slice(-chars)}` : undefined,
     );
+    console.debug(`Service Worker using API key header: ${apiKeyHeader}`);
     console.debug(`Service Worker received proxy url`, proxyUrl);
 
     self.apiKey = apiKey;
+    self.apiKeyHeader = apiKeyHeader;
     self.proxyUrl = proxyUrl;
   }
 };
@@ -38,7 +44,7 @@ export const proxyCall = async (request: Request) => {
   const body = await request.clone().text(); // Clone and read the body
   const headers = new Headers({ ...Object.fromEntries(request.headers.entries()) });
   if (self.apiKey) {
-    headers.append('apikey', self.apiKey);
+    headers.append(self.apiKeyHeader, self.apiKey);
   }
   const requestInit = {
     method: request.method,

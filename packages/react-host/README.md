@@ -79,6 +79,8 @@ APPSHELL_DESCRIPTION=Appshell React host
 APPSHELL_STYLESHEET_URL=https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap
 # Used during development to access base registry that has api key authentication enabled
 APPSHELL_API_KEY=XXX-API-KEY-FOR-BASE-REGISTRY
+# Header used to send the api key
+APPSHELL_API_KEY_HEADER=x-api-key
 # Used during development to access base registry that may be behind authenticated endpoint
 APPSHELL_PROXY_URL=http://proxy-url.com/proxy
 # Url of Appshell service worker script

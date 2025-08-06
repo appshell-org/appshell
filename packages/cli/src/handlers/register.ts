@@ -4,6 +4,7 @@ import fs from 'fs';
 
 export type RegisterManifestArgs = {
   apiKey: string | undefined;
+  apiKeyHeader: string | undefined;
   registry: string;
   manifest: string[] | undefined;
   allowOverrides: boolean;

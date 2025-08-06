@@ -6,6 +6,7 @@ import { fetchPackageSpec, fetchSnapshot } from '../util/fetch';
 
 export type SyncArgs = {
   apiKey: string | undefined;
+  apiKeyHeader: string | undefined;
   registry: string;
   workingDir: string;
   packageManager: string;
@@ -14,15 +15,16 @@ export type SyncArgs = {
 };
 
 export default async (argv: SyncArgs) => {
-  const { workingDir, registry, packageManager, resolutionStrategy, dryRun, apiKey } = argv;
+  const { workingDir, registry, packageManager, resolutionStrategy, dryRun, apiKey, apiKeyHeader } =
+    argv;
 
   try {
     console.log(
       `sync --working-dir=${workingDir} --registry=${registry} --package-manager=${packageManager} --resolution-strategy=${resolutionStrategy} --dry-run=${dryRun}`,
     );
 
-    const packageSpec = await fetchPackageSpec(workingDir, apiKey);
-    const snapshot = await fetchSnapshot(registry, apiKey);
+    const packageSpec = await fetchPackageSpec(workingDir, apiKey, apiKeyHeader);
+    const snapshot = await fetchSnapshot(registry, apiKey, apiKeyHeader);
 
     console.debug('Snapshot:', JSON.stringify(snapshot, null, 2));
     const jobs = Object.entries(snapshot.modules).map(([name, options]) =>

@@ -9,6 +9,7 @@ type LoadJsonOptions = {
   insecure: boolean;
   target: string | RegExp;
   apiKey?: string;
+  apiKeyHeader?: string;
   proxyUrl?: string;
 };
 
@@ -17,12 +18,13 @@ const loadJson = async <T = Record<string, unknown>>(
   insecure: boolean,
   target: string | RegExp,
   apiKey?: string,
+  apiKeyHeader?: string,
   proxyUrl?: string,
 ): Promise<T[]> => {
   if (isValidUrl(jsonPathOrUrl)) {
     const url = proxyUrl ? `${proxyUrl}?target=${encodeURI(jsonPathOrUrl)}` : jsonPathOrUrl;
     console.log(`loading json from host ${url}`);
-    const headers = apiKey ? { apikey: apiKey } : {};
+    const headers = apiKey && apiKeyHeader ? { [apiKeyHeader]: apiKey } : {};
     const resp = await axios.get<T>(
       url,
       insecure
@@ -67,6 +69,7 @@ export default async <T = Record<string, unknown>>(
     insecure: false,
     target: /\.json$/i,
     apiKey: undefined,
+    apiKeyHeader: undefined,
     proxyUrl: undefined,
   },
 ): Promise<T[]> => {
@@ -75,6 +78,7 @@ export default async <T = Record<string, unknown>>(
     options.insecure,
     options.target,
     options.apiKey,
+    options.apiKeyHeader,
     options.proxyUrl,
   );
 

@@ -9,6 +9,7 @@ jest.mock('../src/util/axios');
 
 describe('cli util', () => {
   const apiKey = 'test-api-key';
+  const apiKeyHeader = 'test-api-key-header';
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -46,13 +47,13 @@ describe('cli util', () => {
         data: snapshot,
       });
 
-      await fetchSnapshot(registry, apiKey);
+      await fetchSnapshot(registry, apiKey, apiKeyHeader);
 
       expect(axiosGetSpy).toHaveBeenCalledWith(
         `${registry}/appshell.snapshot.json`,
         expect.objectContaining({
           headers: {
-            apikey: apiKey,
+            [apiKeyHeader]: apiKey,
           },
           httpsAgent: expect.anything(),
         }),
@@ -67,7 +68,7 @@ describe('cli util', () => {
         .mockReturnValueOnce(JSON.stringify(snapshot));
       const axiosGetSpy = jest.spyOn(axios, 'get');
 
-      await fetchSnapshot(registry, apiKey);
+      await fetchSnapshot(registry, apiKey, apiKeyHeader);
 
       expect(existsSyncSpy).toHaveBeenCalledWith(`${registry}/appshell.snapshot.json`);
       expect(readFileSyncSpy).toHaveBeenCalledWith(`${registry}/appshell.snapshot.json`, 'utf-8');
@@ -85,7 +86,7 @@ describe('cli util', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
       jest.spyOn(axios, 'get').mockResolvedValue(response);
 
-      await expect(() => fetchSnapshot(registry, apiKey)).rejects.toThrowError(
+      await expect(() => fetchSnapshot(registry, apiKey, apiKeyHeader)).rejects.toThrowError(
         `Failed to fetch from registry ${registry}/appshell.snapshot.json. ${response.status} ${response.statusText}`,
       );
     });
@@ -101,7 +102,7 @@ describe('cli util', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
       jest.spyOn(axios, 'get').mockResolvedValue(response);
 
-      await expect(() => fetchSnapshot(registry, apiKey)).rejects.toThrowError(
+      await expect(() => fetchSnapshot(registry, apiKey, apiKeyHeader)).rejects.toThrowError(
         `Failed to fetch from registry ${registry}/appshell.snapshot.json. Invalid content type. text/html`,
       );
     });

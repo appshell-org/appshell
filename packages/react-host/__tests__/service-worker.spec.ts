@@ -8,6 +8,7 @@ enableFetchMocks();
 
 const mockSelf = {
   apiKey: '',
+  apiKeyHeader: '',
   proxyUrl: '',
   addEventListener: jest.fn(),
   skipWaiting: jest.fn(),
@@ -26,12 +27,14 @@ describe('service-worker', () => {
   let originalLocation: Location;
   const workerLocation: Location = mockDeep<Location>({ origin: 'https://example.com' });
   const apiKey = 'test-api-key';
+  const apiKeyHeader = 'test-api-key-header';
   const proxyUrl = 'http://my-proxy-domain/proxy';
   const mockMessageEvent: ExtendableMessageEvent = {
     data: {
       type: 'config',
       config: {
         apiKey,
+        apiKeyHeader,
         proxyUrl,
       },
     },
@@ -113,10 +116,11 @@ describe('service-worker', () => {
     expect(consoleDebugSpy).toHaveBeenCalledWith('Service Worker activating.');
   });
 
-  it('should set apiKey on message event', () => {
+  it('should set api config on message event', () => {
     worker.handleMessageEvent(mockMessageEvent);
 
     expect(mockSelf.apiKey).toBe(apiKey);
+    expect(mockSelf.apiKeyHeader).toBe(apiKeyHeader);
     expect(mockSelf.proxyUrl).toBe(proxyUrl);
   });
 
@@ -165,7 +169,7 @@ describe('service-worker', () => {
     expect(fetchSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         url: `${proxyUrl}?target=https://example.com`,
-        headers: new Headers({ apikey: apiKey }),
+        headers: new Headers({ [apiKeyHeader]: apiKey }),
         credentials: 'same-origin',
         mode: 'cors',
         body: undefined,

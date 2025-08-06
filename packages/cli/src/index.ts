@@ -367,6 +367,13 @@ yargs(hideBin(process.argv))
     description: 'Api key to use for appshell registry',
     global: true,
   })
+  .option('apiKeyHeader', {
+    alias: 'h',
+    default: process.env.APPSHELL_API_KEY_HEADER || config.apiKeyHeader || '',
+    type: 'string',
+    description: 'Api key to use for appshell registry',
+    global: true,
+  })
   .option('registry', {
     alias: 'r',
     describe: 'Appshell registry to operate against',

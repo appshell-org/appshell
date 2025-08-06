@@ -9,6 +9,7 @@ import { fetchPackageSpec, fetchSnapshot } from '../util/fetch';
 
 export type OutdatedArgs = {
   apiKey: string | undefined;
+  apiKeyHeader: string | undefined;
   registry: string;
   workingDir: string;
   manager: string;
@@ -160,13 +161,13 @@ const printSummary = (results: ComparisonResults[]) => {
 };
 
 export default async (argv: OutdatedArgs) => {
-  const { apiKey, workingDir, registry, manager } = argv;
+  const { apiKey, apiKeyHeader, workingDir, registry, manager } = argv;
 
   try {
     console.log(`outdated --working-dir=${workingDir} --registry=${registry} --manager=${manager}`);
 
-    const packageSpec = await fetchPackageSpec(workingDir, apiKey);
-    const snapshot = await fetchSnapshot(registry, apiKey);
+    const packageSpec = await fetchPackageSpec(workingDir, apiKey, apiKeyHeader);
+    const snapshot = await fetchSnapshot(registry, apiKey, apiKeyHeader);
 
     console.debug('Snapshot:', JSON.stringify(snapshot, null, 2));
     const jobs = Object.entries(snapshot.modules).map(async ([name, options]) => {
