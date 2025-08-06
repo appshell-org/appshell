@@ -48,7 +48,7 @@ jobs:
 
   publish_npm_packages:
     needs: build
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
+    if: ${{ github.ref == 'refs/heads/main' || contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -83,7 +83,7 @@ jobs:
         run: npm ci
 
       - name: Version and tag pre-release
-        if: ${{ github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
+        if: ${{ contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
         run: npx lerna version --no-push --conventional-prerelease --yes
 
       - name: Version and tag release
@@ -107,6 +107,7 @@ jobs:
   push_docker_images:
     name: Push Docker images to Docker Hub
     needs: publish_npm_packages
+    if: ${{ github.ref == 'refs/heads/main' || contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -132,6 +133,15 @@ jobs:
         id: vars
         run: echo "version=$(cat packages/${{ matrix.package-dir }}/package.json | grep \"version\" | sed 's/.*\://' | tr -d '", ')" >> $GITHUB_OUTPUT
 
+      - name: Get the staging version
+        id: next_rc
+        run: |
+          IMAGE_NAME=${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}
+          EXISTING_TAGS=$(docker manifest inspect $IMAGE_NAME --format '{{range .Tags}}{{.}}{{"\n"}}{{end}}' | grep -E "${{ steps.vars.outputs.version }}-rc" || true)
+          LATEST_RC=$(echo "$EXISTING_TAGS" | grep -oE '[0-9]+$' | sort -n | tail -n 1 || echo "0")
+          NEXT_RC=$((LATEST_RC + 1))
+          echo "next_rc=${{ steps.vars.outputs.version }}-rc$NEXT_RC" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker production image
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v4
@@ -147,6 +157,7 @@ jobs:
             ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:${{ steps.vars.outputs.version }}
 
       - name: Build and push Docker developer image
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -158,3 +169,29 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:developer
             ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:${{ steps.vars.outputs.version }}-developer
+
+      - name: Build and push Docker production release candidate image
+        if: ${{ contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          target: production
+          build-args: |
+            SOURCE_DIR=packages/${{ matrix.package-dir }}
+          tags: |
+            ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:${{ steps.next_rc.outputs.next_rc }}
+
+      - name: Build and push Docker developer release candidate image
+        if: ${{ contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          target: developer
+          build-args: |
+            SOURCE_DIR=packages/${{ matrix.package-dir }}
+          tags: |
+            ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:developer-${{ steps.next_rc.outputs.next_rc }}
