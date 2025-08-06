@@ -107,7 +107,6 @@ jobs:
   push_docker_images:
     name: Push Docker images to Docker Hub
     needs: publish_npm_packages
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
     runs-on: ubuntu-latest
 
     strategy:
