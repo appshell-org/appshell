@@ -133,6 +133,9 @@ jobs:
         id: vars
         run: echo "version=$(cat packages/${{ matrix.package-dir }}/package.json | grep \"version\" | sed 's/.*\://' | tr -d '", ')" >> $GITHUB_OUTPUT
 
+      - name: set up docker buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build and push Docker production image
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v4
@@ -141,6 +144,7 @@ jobs:
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           target: production
+          platforms: linux/amd64, linux/arm64
           build-args: |
             SOURCE_DIR=packages/${{ matrix.package-dir }}
           tags: |
