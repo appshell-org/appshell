@@ -8,6 +8,7 @@ import { inspect } from 'util';
 export type GenerateGlobalConfigArgs = {
   registry: string[] | undefined;
   apiKey: string;
+  apiKeyHeader: string;
   proxyUrl: string;
   validateRegistrySslCert: boolean;
   outDir: string;
@@ -15,7 +16,8 @@ export type GenerateGlobalConfigArgs = {
 };
 
 export default async (argv: GenerateGlobalConfigArgs): Promise<void> => {
-  const { registry, apiKey, proxyUrl, validateRegistrySslCert, outDir, outFile } = argv;
+  const { registry, apiKey, apiKeyHeader, proxyUrl, validateRegistrySslCert, outDir, outFile } =
+    argv;
   const registries = registry || [];
 
   if (registries.length < 1) {
@@ -26,7 +28,7 @@ export default async (argv: GenerateGlobalConfigArgs): Promise<void> => {
   console.log(
     `generating global appshell configuration --validate-registry-ssl-cert=${validateRegistrySslCert} --out-dir=${outDir} --out-file=${outFile} --registry=${registries} --api-key=${utils.blur(
       apiKey,
-    )} --proxy-url=${proxyUrl}`,
+    )} --api-key-header=${apiKeyHeader} --proxy-url=${proxyUrl}`,
   );
 
   try {
@@ -38,6 +40,7 @@ export default async (argv: GenerateGlobalConfigArgs): Promise<void> => {
     const config = await generateGlobalConfig(registries, {
       insecure: !validateRegistrySslCert,
       apiKey,
+      apiKeyHeader,
       proxyUrl,
     });
 
