@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1-alpha.2](https://github.com/navaris/appshell/compare/@appshell/cli@0.8.1-alpha.1...@appshell/cli@0.8.1-alpha.2) (2025-08-07)
+
+
+### Bug Fixes
+
+* generate global config args for api key header ([e6ffcab](https://github.com/navaris/appshell/commit/e6ffcab0fa9df72418b9c9be197395f0d84d372c))
+
+
+
+
+
 ## [0.8.1-alpha.1](https://github.com/navaris/appshell/compare/@appshell/cli@0.8.1-alpha.0...@appshell/cli@0.8.1-alpha.1) (2025-08-07)
 
 
