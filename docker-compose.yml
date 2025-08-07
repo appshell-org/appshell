@@ -1,6 +1,6 @@
 services:
   appshell-react-host:
-    image: appshell/react-host:${BUILD_TARGET}
+    image: appshell/react-host:${APPSHELL_IMAGE_TAG}
     build:
       context: '.'
       target: ${BUILD_TARGET}

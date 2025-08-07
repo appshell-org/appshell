@@ -26,7 +26,7 @@ ENV APPSHELL_SERVICE_WORKER_URL=${APPSHELL_SERVICE_WORKER_URL:-'/appshell-servic
 # Expose application port
 EXPOSE ${APPSHELL_PORT}
 
-CMD ln -sf /appshell/${ENV_TARGET}.env .env && ln -sf /appshell/appshell_registry . && ${APPSHELL_CONTAINER_COMMAND}
+CMD ln -sf /appshell/${ENV_TARGET}.env .env && [ -e ./appshell_registry ] || ln -sf /appshell/appshell_registry . && ${APPSHELL_CONTAINER_COMMAND}
 
 ### DEPENDENCIES
 FROM base AS dependencies

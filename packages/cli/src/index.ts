@@ -107,6 +107,12 @@ const startCommand: yargs.CommandModule<unknown, StartArgs> = {
       .option('registry', {
         description: 'Registry with which the app is registered',
       })
+      .option('proxyUrl', {
+        default: process.env.APPSHELL_PROXY_URL || '',
+        type: 'string',
+        description: 'Proxy url for calls to get external resources',
+        global: true,
+      })
       .option('baseRegistry', {
         alias: 'a',
         default: [],

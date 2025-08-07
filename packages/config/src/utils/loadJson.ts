@@ -45,7 +45,9 @@ const loadJson = async <T = Record<string, unknown>>(
     if (stat.isDirectory()) {
       console.debug(`loading json from dir ${jsonPathOrUrl}`);
       const files = list(jsonPathOrUrl, 1, target);
-      const entries = files.map((file) => loadJson(file, insecure, target, apiKey, proxyUrl));
+      const entries = files.map((file) =>
+        loadJson(file, insecure, target, apiKey, apiKeyHeader, proxyUrl),
+      );
 
       const docs = await Promise.all(entries).then((items) => items.flat() as T[]);
 
@@ -73,6 +75,7 @@ export default async <T = Record<string, unknown>>(
     proxyUrl: undefined,
   },
 ): Promise<T[]> => {
+  console.log(`loading json from ${jsonPathOrUrl}`, JSON.stringify(options, null, 2));
   const items = await loadJson<T[]>(
     jsonPathOrUrl,
     options.insecure,

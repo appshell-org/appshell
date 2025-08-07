@@ -28,6 +28,10 @@ export const fetchServiceWorkerConfig = async () => {
     const { apiKey, apiKeyHeader, proxyUrl } = await response.json();
 
     const url = new URL(proxyUrl);
+    console.log(
+      `Appshell Service Worker initialized with configuration apiKey: ${apiKey}, apiKeyHeader: ${apiKeyHeader}, proxyUrl: ${proxyUrl}, proxy string: ${url.toString()}`,
+    );
+
     if (/^host.docker.internal/.test(url.hostname)) {
       console.debug(
         `Appshell Service Worker replacing configured hostname ${url.hostname} with localhost`,
