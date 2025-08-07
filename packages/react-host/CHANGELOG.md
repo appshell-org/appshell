@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1-alpha.1](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.0...@appshell/react-host@0.7.1-alpha.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* cli args for proxy url ([b40a7be](https://github.com/appshell-org/appshell/commit/b40a7be94fbfdb32453e743c2700a512b7a4537f))
+
+
+
+
+
 ## [0.7.1-alpha.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.0...@appshell/react-host@0.7.1-alpha.0) (2025-08-06)
 
 
