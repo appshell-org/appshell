@@ -53,6 +53,7 @@ WORKDIR /appshell/${SOURCE_DIR}
 
 COPY --from=build /appshell/${SOURCE_DIR}/package.json .
 COPY --from=build /appshell/${SOURCE_DIR}/dist ./dist
+COPY --from=build /appshell/node_modules /appshell/node_modules
 
 COPY --from=build /appshell/packages/cli /appshell/packages/cli
 RUN npm install -g file:/appshell/packages/cli
