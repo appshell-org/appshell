@@ -1,38 +1,27 @@
-import fs from 'fs';
-import path from 'path';
-import readline from 'readline';
-
 const shouldProcess = (line: string, prefixRegex: RegExp) =>
   !line.match(/^(\s*|#.*)$/) && prefixRegex.test(line);
 
-export default async (env: string, prefix = '', overwrite = false) =>
-  new Promise<Map<string, string>>((resolve, reject) => {
-    const map = new Map<string, string>();
-    const dotenvPath = path.resolve(env);
+export default async (prefix = '') =>
+  new Promise<Map<string, string | undefined>>((resolve, reject) => {
+    try {
+      const map = new Map<string, string | undefined>();
+      // Check if the prefix appears to be a regex pattern (contains special regex chars)
+      const isRegexPattern = /[()|[\]{}^$*+?\\]/.test(prefix);
 
-    if (fs.existsSync(dotenvPath)) {
-      const prefixRegex = new RegExp(`^${prefix}.*$`);
-      const stream = fs.createReadStream(dotenvPath);
-      const rl = readline.createInterface({
-        input: stream,
-      });
+      // Create the appropriate regex
+      const prefixRegex = isRegexPattern
+        ? new RegExp(prefix) // Use the pattern as-is
+        : new RegExp(`^${prefix}.*$`); // Simple prefix matching
 
-      rl.on('line', (line) => {
-        if (shouldProcess(line, prefixRegex)) {
-          const [NAME, VALUE] = line.split('=');
-          let currentValue = process.env[NAME];
-          if (!currentValue || overwrite) {
-            currentValue = VALUE;
-          }
-
-          map.set(NAME, currentValue);
+      Object.entries(process.env).reduce((acc, [key, value]) => {
+        if (shouldProcess(key, prefixRegex)) {
+          map.set(key, value);
         }
-      });
+        return acc;
+      }, map);
 
-      rl.on('close', () => {
-        resolve(map);
-      });
-    } else {
-      reject(new Error(`${dotenvPath} not found.`));
+      resolve(map);
+    } catch (error) {
+      reject(error);
     }
   });

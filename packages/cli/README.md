@@ -258,17 +258,16 @@ Generate the runtime environment js file that reflects the current process.env
 Options:
       --help     Show help                                                  [boolean]
       --version  Show version number                                        [boolean]
-  -e, --env      The .env file to process                                   [string] [default: ".env"]
   -o, --outDir   Output location for the appshell environment js             [string] [default: "."]
   -f, --outFile  Output filename for the appshell environment js             [string] [default: "appshell.env.js"]
-  -p, --prefix   Only capture environment variables that start with prefix  [string] [default: ""]
+  -p, --prefix   Only capture environment variables that start with prefix or regex [string] [default: ""]
   -g, --globalName     Global variable name window[globalName] used in the output js    [string] [default: "__appshell_env__"]
 ```
 
 ### Sample usage
 
 ```bash
-appshell generate env -e .env --prefix APPSHELL_ --outDir dist
+appshell generate env --prefix APPSHELL_ --outDir dist
 ```
 
 Sample output `appshell.env.js`
@@ -277,6 +276,22 @@ Sample output `appshell.env.js`
 window.__appshell_env__ = {
   APPSHELL_VAR_1 = 'val 1',
   APPSHELL_VAR_2 = 'val 2'
+};
+```
+
+### Using regex to match prefix
+
+```bash
+appshell generate env --prefix '^(APPSHELL_|FOO_).*' --outDir dist
+```
+
+Sample output `appshell.env.js`
+
+```js
+window.__appshell_env__ = {
+  APPSHELL_VAR_1 = 'val 1',
+  APPSHELL_VAR_2 = 'val 2',
+  FOO_VAR = 'some value'
 };
 ```
 

@@ -244,12 +244,6 @@ const generateEnvCommand: yargs.CommandModule<unknown, GenerateEnvArgs> = {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   builder: (yargs) =>
     yargs
-      .option('env', {
-        alias: 'e',
-        default: '.env',
-        type: 'string',
-        description: 'The .env file to process',
-      })
       .option('outDir', {
         alias: 'o',
         default: 'dist',
@@ -274,13 +268,6 @@ const generateEnvCommand: yargs.CommandModule<unknown, GenerateEnvArgs> = {
         default: '__appshell_env__',
         type: 'string',
         description: 'Global variable name window[globalName] used in the output js',
-      })
-      .option('overwrite', {
-        alias: 'w',
-        default: false,
-        type: 'boolean',
-        description:
-          'If true, values in --env take precendent over those currently set in the environment',
       }),
   handler: generateEnvHandler,
 };

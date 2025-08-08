@@ -20,31 +20,43 @@ type TestMetadata = {
 describe('generate', () => {
   const packageName = 'config';
 
-  describe('runtime env file', () => {
-    const env = `packages/${packageName}/__tests__/assets/test.env`;
+  beforeAll(() => {
+    process.env.REGISTRY = 'packages/cli/__tests__/assets/appshell_registry';
+    process.env.ROOT = 'TestModule/Workspace';
+    process.env.TEST_ENV_FOO = 'foo';
+    process.env.TEST_ENV_BAR = 'bar';
+    process.env.TEST_NUM = '100';
+  });
 
+  afterAll(() => {
+    delete process.env.REGISTRY;
+    delete process.env.ROOT;
+    delete process.env.TEST_ENV_FOO;
+    delete process.env.TEST_ENV_BAR;
+    delete process.env.TEST_NUM;
+  });
+
+  describe('runtime env file', () => {
     it('should generate the runtime environment js file', async () => {
-      const environment = await generateEnv(env);
+      const environment = await generateEnv('^(TEST_|REGISTRY|ROOT).*');
 
       expect(Object.fromEntries(environment)).toStrictEqual({
         REGISTRY: 'packages/cli/__tests__/assets/appshell_registry',
         ROOT: 'TestModule/Workspace',
         TEST_ENV_FOO: 'foo',
         TEST_ENV_BAR: 'bar',
+        TEST_NUM: '100',
       });
     });
 
     it('should capture only prefixed environment vars when prefix is supplied', async () => {
-      const environment = await generateEnv(env, 'TEST_');
+      const environment = await generateEnv('TEST_');
 
       expect(Object.fromEntries(environment)).toStrictEqual({
         TEST_ENV_FOO: 'foo',
         TEST_ENV_BAR: 'bar',
+        TEST_NUM: '100',
       });
-    });
-
-    it('should fail gracefully when env file is not found', async () => {
-      await expect(generateEnv('does_not_exist.env')).rejects.toThrow();
     });
   });
 
