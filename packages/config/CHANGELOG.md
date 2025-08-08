@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/config@0.9.1-alpha.1...@appshell/config@0.10.0-alpha.0) (2025-08-08)
+
+
+### Features
+
+* eliminate requirement for env file for generate env command ([673fb75](https://github.com/navaris/appshell/commit/673fb75060878568f6e41402a7ce2f20d386ee58))
+
+
+
+
+
 ## [0.9.1-alpha.1](https://github.com/navaris/appshell/compare/@appshell/config@0.9.1-alpha.0...@appshell/config@0.9.1-alpha.1) (2025-08-07)
 
 
