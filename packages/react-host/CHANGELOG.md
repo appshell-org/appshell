@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1-alpha.3](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.2...@appshell/react-host@0.7.1-alpha.3) (2025-08-10)
+
+
+### Bug Fixes
+
+* added crossorigin="use-credentials" for manifest.json ([7e320be](https://github.com/appshell-org/appshell/commit/7e320be63459bfb7bcc176f3d1a07128e80bf27f))
+
+
+
+
+
 ## [0.7.1-alpha.2](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.1...@appshell/react-host@0.7.1-alpha.2) (2025-08-07)
 
 **Note:** Version bump only for package @appshell/react-host
