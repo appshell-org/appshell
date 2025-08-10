@@ -14,7 +14,7 @@ const fetchManifest = async (url: string): Promise<AppshellManifest | undefined>
 
   fetchedManifestCache.set(url, undefined);
 
-  const response = await fetch(url);
+  const response = await fetch(url, { credentials: 'include' });
 
   if (response.ok) {
     return response.json();
