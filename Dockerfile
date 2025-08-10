@@ -36,7 +36,7 @@ COPY . .
 RUN npm install --pure-lockfile
 
 ### BUILD
-FROM dependencies as build
+FROM dependencies AS build
 # Validate the build
 RUN npm run lint && npm run test:ci && npm run build
 
