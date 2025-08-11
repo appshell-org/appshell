@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1-alpha.4](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.3...@appshell/react-host@0.7.1-alpha.4) (2025-08-11)
+
+
+### Bug Fixes
+
+* handle proxyless service worker config ([7754f69](https://github.com/appshell-org/appshell/commit/7754f698e07e43b630040743c36f2e0dceaf1467))
+
+
+
+
+
 ## [0.7.1-alpha.3](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.2...@appshell/react-host@0.7.1-alpha.3) (2025-08-10)
 
 
