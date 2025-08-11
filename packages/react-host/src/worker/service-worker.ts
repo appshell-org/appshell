@@ -58,7 +58,7 @@ export const proxyCall = async (request: Request) => {
     integrity: request.integrity,
   };
   const newRequest = new Request(
-    `${self.proxyUrl}?target=${requestUrl}`,
+    self.proxyUrl ? `${self.proxyUrl}?target=${requestUrl}` : requestUrl,
     bodyForbidden(request.method)
       ? requestInit
       : {

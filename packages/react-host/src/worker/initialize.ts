@@ -27,19 +27,36 @@ export const fetchServiceWorkerConfig = async () => {
   if (response.ok) {
     const { apiKey, apiKeyHeader, proxyUrl } = await response.json();
 
-    const url = new URL(proxyUrl);
     console.log(
-      `Appshell Service Worker initialized with configuration apiKey: ${apiKey}, apiKeyHeader: ${apiKeyHeader}, proxyUrl: ${proxyUrl}, proxy string: ${url.toString()}`,
+      `Appshell Service Worker initialized with configuration apiKey: ${apiKey}, apiKeyHeader: ${apiKeyHeader}, proxyUrl: ${proxyUrl}`,
     );
 
-    if (/^host.docker.internal/.test(url.hostname)) {
-      console.debug(
-        `Appshell Service Worker replacing configured hostname ${url.hostname} with localhost`,
-      );
-      url.hostname = 'localhost';
+    let url: URL;
+    if (proxyUrl) {
+      try {
+        url = new URL(proxyUrl);
+      } catch (error) {
+        console.error(`Invalid proxy URL: ${proxyUrl}`, error);
+        throw new Error('Invalid proxy URL');
+      }
+
+      // Replace host.docker.internal with localhost to enable call to be made from the browser
+      if (/^host.docker.internal/.test(url.hostname)) {
+        console.debug(
+          `Appshell Service Worker replacing configured hostname ${url.hostname} with localhost`,
+        );
+        url.hostname = 'localhost';
+      }
+
+      return { apiKey, apiKeyHeader, proxyUrl: url.toString() };
     }
 
-    return { apiKey, apiKeyHeader, proxyUrl: url.toString() };
+    // Default to the current hostname
+    const defaultHostname = `${window.location.protocol}//${window.location.host}`;
+    url = new URL(defaultHostname);
+    console.debug(`Proxy URL not set. Defaulting to current hostname: ${defaultHostname}`);
+
+    return { apiKey, apiKeyHeader, proxyUrl };
   }
 
   throw new Error('Failed to fetch service worker config');
