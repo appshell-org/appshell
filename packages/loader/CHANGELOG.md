@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/navaris/appshell/compare/@appshell/loader@0.4.0...@appshell/loader@0.5.0) (2025-08-12)
+
+
+### Bug Fixes
+
+* configurable api key header support, minor fixes ([2f0bf02](https://github.com/navaris/appshell/commit/2f0bf027b92398f91b8e8cbfbf543d61fe37b7a0))
+
+
+### Features
+
+* appshell cli api key support, init sync and outdated commands ([#6](https://github.com/navaris/appshell/issues/6)) ([acc5fa2](https://github.com/navaris/appshell/commit/acc5fa234f91a167038161d5080481c43f8eb8b4))
+
+
+
+
+
 # [0.5.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/loader@0.4.0...@appshell/loader@0.5.0-alpha.0) (2025-08-10)
 
 

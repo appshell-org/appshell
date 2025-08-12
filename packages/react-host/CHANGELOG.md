@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.0...@appshell/react-host@0.7.1) (2025-08-12)
+
+
+### Bug Fixes
+
+* configurable api key header support, minor fixes ([2f0bf02](https://github.com/appshell-org/appshell/commit/2f0bf027b92398f91b8e8cbfbf543d61fe37b7a0))
+
+
+
+
+
 ## [0.7.1-alpha.4](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.3...@appshell/react-host@0.7.1-alpha.4) (2025-08-11)
 
 
