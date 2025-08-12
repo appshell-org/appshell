@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1-alpha.4](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.3...@appshell/react-host@0.7.1-alpha.4) (2025-08-11)
+
+
+### Bug Fixes
+
+* handle proxyless service worker config ([7754f69](https://github.com/appshell-org/appshell/commit/7754f698e07e43b630040743c36f2e0dceaf1467))
+
+
+
+
+
+## [0.7.1-alpha.3](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.2...@appshell/react-host@0.7.1-alpha.3) (2025-08-10)
+
+
+### Bug Fixes
+
+* added crossorigin="use-credentials" for manifest.json ([7e320be](https://github.com/appshell-org/appshell/commit/7e320be63459bfb7bcc176f3d1a07128e80bf27f))
+
+
+
+
+
+## [0.7.1-alpha.2](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.1...@appshell/react-host@0.7.1-alpha.2) (2025-08-07)
+
+**Note:** Version bump only for package @appshell/react-host
+
+
+
+
+
+## [0.7.1-alpha.1](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.1-alpha.0...@appshell/react-host@0.7.1-alpha.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* cli args for proxy url ([b40a7be](https://github.com/appshell-org/appshell/commit/b40a7be94fbfdb32453e743c2700a512b7a4537f))
+
+
+
+
+
+## [0.7.1-alpha.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.7.0...@appshell/react-host@0.7.1-alpha.0) (2025-08-06)
+
+
+### Bug Fixes
+
+* configurable api key header support ([e1b995a](https://github.com/appshell-org/appshell/commit/e1b995a98fbb58250f3e428cb116a215b0c1d835))
+
+
+
+
+
 # [0.7.0](https://github.com/appshell-org/appshell/compare/@appshell/react-host@0.6.2...@appshell/react-host@0.7.0) (2025-02-07)
 
 

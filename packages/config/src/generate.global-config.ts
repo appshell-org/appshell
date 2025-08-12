@@ -8,6 +8,7 @@ import { AppshellGlobalConfigValidator } from './validators';
 type GenerateGlobalConfigOptions = {
   insecure: boolean;
   apiKey?: string;
+  apiKeyHeader?: string;
   proxyUrl?: string;
 };
 
@@ -35,6 +36,7 @@ export default async (
           insecure: options.insecure,
           target: /(.config.json)/i,
           apiKey: options.apiKey,
+          apiKeyHeader: options.apiKeyHeader,
           proxyUrl: options.proxyUrl,
         });
         return config;

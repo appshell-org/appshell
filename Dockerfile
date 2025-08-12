@@ -19,13 +19,14 @@ ENV APPSHELL_CONFIG_URL=${APPSHELL_PUBLIC_URL}'/appshell.config.json'
 ENV APPSHELL_PRIMARY_COLOR=${APPSHELL_PRIMARY_COLOR:-'#8ed6fb'}
 ENV APPSHELL_THEME_COLOR=${APPSHELL_THEME_COLOR:-'#282c34'}
 ENV APPSHELL_API_KEY=${APPSHELL_API_KEY}
+ENV APPSHELL_API_KEY_HEADER=${APPSHELL_API_KEY_HEADER:-'x-api-key'}
 ENV APPSHELL_PROXY_URL=${APPSHELL_PROXY_URL}
 ENV APPSHELL_SERVICE_WORKER_URL=${APPSHELL_SERVICE_WORKER_URL:-'/appshell-service-worker.js'}
 
 # Expose application port
 EXPOSE ${APPSHELL_PORT}
 
-CMD ln -sf /appshell/${ENV_TARGET}.env .env && ln -sf /appshell/appshell_registry . && ${APPSHELL_CONTAINER_COMMAND}
+CMD ln -sf /appshell/${ENV_TARGET}.env .env && [ -e ./appshell_registry ] || ln -sf /appshell/appshell_registry . && ${APPSHELL_CONTAINER_COMMAND}
 
 ### DEPENDENCIES
 FROM base AS dependencies
@@ -35,7 +36,7 @@ COPY . .
 RUN npm install --pure-lockfile
 
 ### BUILD
-FROM dependencies as build
+FROM dependencies AS build
 # Validate the build
 RUN npm run lint && npm run test:ci && npm run build
 
@@ -52,6 +53,7 @@ WORKDIR /appshell/${SOURCE_DIR}
 
 COPY --from=build /appshell/${SOURCE_DIR}/package.json .
 COPY --from=build /appshell/${SOURCE_DIR}/dist ./dist
+COPY --from=build /appshell/node_modules /appshell/node_modules
 
 COPY --from=build /appshell/packages/cli /appshell/packages/cli
 RUN npm install -g file:/appshell/packages/cli

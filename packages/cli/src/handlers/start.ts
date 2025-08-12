@@ -6,6 +6,7 @@ import path from 'path';
 
 export type StartArgs = {
   apiKey: string;
+  apiKeyHeader: string;
   outDir: string;
   env: string;
   envPrefix: string;
@@ -25,6 +26,7 @@ export type StartArgs = {
 export default async (argv: StartArgs): Promise<void> => {
   const {
     apiKey,
+    apiKeyHeader,
     env,
     envGlobalName,
     envPrefix,
@@ -45,7 +47,7 @@ export default async (argv: StartArgs): Promise<void> => {
   console.log(
     `starting appshell --env=${env} --env-prefix=${envPrefix} --env-global-name=${envGlobalName} --out-dir=${outDir} --remote=${remote} --host=${host} --allow-overrides=${allowOverrides} --validate-registry-ssl-cert=${validateRegistrySslCert} --metadata=${metadata} --manifest=${manifest} --manifest-template=${manifestTemplate} --registry=${registry} --base-registry=${baseRegistry} --proxy-url=${proxyUrl} --api-key=${utils.blur(
       apiKey,
-    )}`,
+    )} --api-key-header=${apiKeyHeader}`,
   );
   console.log(`start: proxyUrl ${proxyUrl}`);
 
@@ -92,7 +94,7 @@ export default async (argv: StartArgs): Promise<void> => {
       fs.mkdirSync(registry);
     }
     const watchRegistry = exec(
-      `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert} --api-key ${apiKey} --proxy-url ${proxyUrl} --out-dir ${registry}"`,
+      `npm exec -- nodemon --watch ${registry} --delay 500ms --ext json --exec "appshell generate global-config --registry ${sources} --validate-registry-ssl-cert ${!!validateRegistrySslCert} --api-key ${apiKey} --api-key-header ${apiKeyHeader} --proxy-url ${proxyUrl} --out-dir ${registry}"`,
     );
     watchRegistry.stderr?.on('data', (data) => {
       // eslint-disable-next-line no-console

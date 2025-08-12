@@ -39,7 +39,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
 app.get('/service-worker-config', (req, res) => {
-  res.json({ apiKey: process.env.APPSHELL_API_KEY, proxyUrl: process.env.APPSHELL_PROXY_URL });
+  res.json({
+    apiKey: process.env.APPSHELL_API_KEY,
+    apiKeyHeader: process.env.APPSHELL_API_KEY_HEADER,
+    proxyUrl: process.env.APPSHELL_PROXY_URL,
+  });
 });
 
 app.get('*', (req, res) => {

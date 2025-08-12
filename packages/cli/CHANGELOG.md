@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/cli@0.8.1-alpha.2...@appshell/cli@0.9.0-alpha.0) (2025-08-08)
+
+
+### Features
+
+* eliminate requirement for env file for generate env command ([673fb75](https://github.com/navaris/appshell/commit/673fb75060878568f6e41402a7ce2f20d386ee58))
+
+
+
+
+
+## [0.8.1-alpha.2](https://github.com/navaris/appshell/compare/@appshell/cli@0.8.1-alpha.1...@appshell/cli@0.8.1-alpha.2) (2025-08-07)
+
+
+### Bug Fixes
+
+* generate global config args for api key header ([e6ffcab](https://github.com/navaris/appshell/commit/e6ffcab0fa9df72418b9c9be197395f0d84d372c))
+
+
+
+
+
+## [0.8.1-alpha.1](https://github.com/navaris/appshell/compare/@appshell/cli@0.8.1-alpha.0...@appshell/cli@0.8.1-alpha.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* cli args for proxy url ([b40a7be](https://github.com/navaris/appshell/commit/b40a7be94fbfdb32453e743c2700a512b7a4537f))
+
+
+
+
+
+## [0.8.1-alpha.0](https://github.com/navaris/appshell/compare/@appshell/cli@0.8.0...@appshell/cli@0.8.1-alpha.0) (2025-08-06)
+
+
+### Bug Fixes
+
+* configurable api key header support ([e1b995a](https://github.com/navaris/appshell/commit/e1b995a98fbb58250f3e428cb116a215b0c1d835))
+
+
+
+
+
 # [0.8.0](https://github.com/navaris/appshell/compare/@appshell/cli@0.7.2...@appshell/cli@0.8.0) (2025-02-07)
 
 

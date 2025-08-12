@@ -5,11 +5,23 @@ import generateEnvHandler from '../src/handlers/generate.env';
 
 describe('generate.env', () => {
   const prefix = '';
-  const env = 'packages/cli/__tests__/assets/test.env';
   const outDir = path.resolve('packages/cli/__tests__/assets/temp');
   const outFile = 'appshell.env.js';
   const globalName = 'appshell_env';
-  const overwrite = true;
+
+  beforeAll(() => {
+    process.env.REGISTRY = 'packages/cli/__tests__/assets/appshell_registry';
+    process.env.ROOT = 'TestModule/Workspace';
+    process.env.TEST_ENV_FOO = 'foo';
+    process.env.TEST_ENV_BAR = 'bar';
+  });
+
+  afterAll(() => {
+    delete process.env.REGISTRY;
+    delete process.env.ROOT;
+    delete process.env.TEST_ENV_FOO;
+    delete process.env.TEST_ENV_BAR;
+  });
 
   afterEach(() => {
     rimrafSync(outDir);
@@ -17,12 +29,10 @@ describe('generate.env', () => {
 
   it('should generate the runtime environment js file', async () => {
     await generateEnvHandler({
-      env,
-      prefix,
+      prefix: '^(TEST_|REGISTRY|ROOT).*',
       outDir,
       outFile,
       globalName,
-      overwrite,
     });
     const actual = fs.readFileSync(path.join(outDir, outFile));
 
@@ -31,12 +41,10 @@ describe('generate.env', () => {
 
   it('should capture only prefixed environment vars when prefix is supplied', async () => {
     await generateEnvHandler({
-      env,
       prefix: 'TEST_',
       outDir,
       outFile,
       globalName,
-      overwrite,
     });
     const actual = fs.readFileSync(path.join(outDir, outFile));
 
@@ -46,12 +54,10 @@ describe('generate.env', () => {
   it('should output to outDir when supplied', async () => {
     const testPath = path.resolve('packages/cli/__tests__/assets/temp/test');
     await generateEnvHandler({
-      env,
       prefix,
       outDir: testPath,
       outFile,
       globalName,
-      overwrite,
     });
     const actual = fs.readFileSync(path.join(testPath, outFile));
 
@@ -61,12 +67,10 @@ describe('generate.env', () => {
   it('should output with outFile name when supplied', async () => {
     const filename = 'test.env.js';
     await generateEnvHandler({
-      env,
       prefix,
       outDir,
       outFile: filename,
       globalName,
-      overwrite,
     });
     const actual = fs.readFileSync(path.join(outDir, filename));
 
@@ -76,28 +80,13 @@ describe('generate.env', () => {
   it('should output with global variable name supplied', async () => {
     const testGlobalName = 'my_global_var';
     await generateEnvHandler({
-      env,
       prefix,
       outDir,
       outFile,
       globalName: testGlobalName,
-      overwrite,
     });
     const actual = fs.readFileSync(path.join(outDir, outFile));
 
     expect(actual.includes(`window.${testGlobalName}`)).toBe(true);
-  });
-
-  it('should reject when .env file does not exist', async () => {
-    await expect(
-      generateEnvHandler({
-        env: 'assets/does_not_exist.env',
-        prefix,
-        outDir,
-        outFile: 'appshell.env.js',
-        globalName,
-        overwrite,
-      }),
-    ).rejects.toThrow();
   });
 });

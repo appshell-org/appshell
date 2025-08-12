@@ -31,6 +31,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
+      - name: Print current branch
+        run: echo "github.ref is ${{ github.ref }}"
+
       - name: Install dependencies
         run: npm ci
 
@@ -45,7 +48,7 @@ jobs:
 
   publish_npm_packages:
     needs: build
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
+    if: ${{ github.ref == 'refs/heads/main' || contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -80,7 +83,7 @@ jobs:
         run: npm ci
 
       - name: Version and tag pre-release
-        if: ${{ github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
+        if: ${{ contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
         run: npx lerna version --no-push --conventional-prerelease --yes
 
       - name: Version and tag release
@@ -104,7 +107,7 @@ jobs:
   push_docker_images:
     name: Push Docker images to Docker Hub
     needs: publish_npm_packages
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat' || github.ref == 'refs/heads/fix' }}
+    if: ${{ github.ref == 'refs/heads/main' || contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -130,6 +133,9 @@ jobs:
         id: vars
         run: echo "version=$(cat packages/${{ matrix.package-dir }}/package.json | grep \"version\" | sed 's/.*\://' | tr -d '", ')" >> $GITHUB_OUTPUT
 
+      - name: set up docker buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build and push Docker production image
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v4
@@ -138,6 +144,7 @@ jobs:
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           target: production
+          platforms: linux/amd64, linux/arm64
           build-args: |
             SOURCE_DIR=packages/${{ matrix.package-dir }}
           tags: |
@@ -145,14 +152,44 @@ jobs:
             ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:${{ steps.vars.outputs.version }}
 
       - name: Build and push Docker developer image
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           target: developer
+          platforms: linux/amd64, linux/arm64
           build-args: |
             SOURCE_DIR=packages/${{ matrix.package-dir }}
           tags: |
             ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:developer
-            ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:${{ steps.vars.outputs.version }}-developer
+            ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:developer-${{ steps.vars.outputs.version }}
+
+      - name: Build and push Docker production release candidate image
+        if: ${{ contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          target: production
+          platforms: linux/amd64, linux/arm64
+          build-args: |
+            SOURCE_DIR=packages/${{ matrix.package-dir }}
+          tags: |
+            ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:${{ steps.vars.outputs.version }}
+
+      - name: Build and push Docker developer release candidate image
+        if: ${{ contains(github.ref, 'refs/heads/feat') || contains(github.ref, 'refs/heads/fix') }}
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          target: developer
+          platforms: linux/amd64, linux/arm64
+          build-args: |
+            SOURCE_DIR=packages/${{ matrix.package-dir }}
+          tags: |
+            ${{ secrets.DOCKER_ORG }}/${{ matrix.package-dir }}:developer-${{ steps.vars.outputs.version }}

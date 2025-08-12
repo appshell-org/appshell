@@ -10,6 +10,7 @@ jest.mock('../src/util/fetch');
 
 describe('cli outdated', () => {
   const apiKey = 'test-api-key';
+  const apiKeyHeader = 'test-api-key-header';
   const testResults = outdatedResults as ComparisonResults;
   let fetchPackageSpecSpy: jest.SpyInstance;
   let fetchSnapshotSpy: jest.SpyInstance;
@@ -31,9 +32,9 @@ describe('cli outdated', () => {
     const errorMessage = `Package spec not found at ${workingDir}/package.json`;
     fetchPackageSpecSpy.mockRejectedValueOnce(new Error(errorMessage));
 
-    await handler({ apiKey, workingDir, registry, manager: 'npm' });
+    await handler({ apiKey, apiKeyHeader, workingDir, registry, manager: 'npm' });
 
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey, apiKeyHeader);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       `Error analyzing outdated shared dependencies`,
       errorMessage,
@@ -46,11 +47,11 @@ describe('cli outdated', () => {
     const modulesToCheck = Object.keys(snapshot.modules).length;
     const outdatedSpy = jest.spyOn(config, 'outdated').mockResolvedValue(testResults);
 
-    await handler({ apiKey, workingDir, registry, manager: 'npm' });
+    await handler({ apiKey, apiKeyHeader, workingDir, registry, manager: 'npm' });
 
     expect(outdatedSpy).toHaveBeenCalledTimes(modulesToCheck);
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
-    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey, apiKeyHeader);
+    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey, apiKeyHeader);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
@@ -60,11 +61,11 @@ describe('cli outdated', () => {
     const modulesToCheck = Object.keys(snapshot.modules).length;
     const outdatedSpy = jest.spyOn(config, 'outdated').mockResolvedValue(testResults);
 
-    await handler({ apiKey, workingDir, registry, manager: 'npm' });
+    await handler({ apiKey, apiKeyHeader, workingDir, registry, manager: 'npm' });
 
     expect(outdatedSpy).toHaveBeenCalledTimes(modulesToCheck);
-    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey);
-    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey);
+    expect(fetchPackageSpecSpy).toHaveBeenCalledWith(workingDir, apiKey, apiKeyHeader);
+    expect(fetchSnapshotSpy).toHaveBeenCalledWith(registry, apiKey, apiKeyHeader);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
@@ -73,7 +74,7 @@ describe('cli outdated', () => {
     const registry = 'http://test.appshell.com';
     fetchSnapshotSpy.mockRejectedValueOnce(new Error('Snapshot fetch failed'));
 
-    await handler({ apiKey, workingDir, registry, manager: 'npm' });
+    await handler({ apiKey, apiKeyHeader, workingDir, registry, manager: 'npm' });
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Error analyzing outdated shared dependencies',
@@ -86,7 +87,7 @@ describe('cli outdated', () => {
     const registry = 'http://test.appshell.com';
     fetchSnapshotSpy.mockRejectedValueOnce(new Error('Snapshot fetch failed'));
 
-    await handler({ apiKey, workingDir, registry, manager: 'npm' });
+    await handler({ apiKey, apiKeyHeader, workingDir, registry, manager: 'npm' });
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Error analyzing outdated shared dependencies',

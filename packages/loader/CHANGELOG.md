@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0-alpha.0](https://github.com/navaris/appshell/compare/@appshell/loader@0.4.0...@appshell/loader@0.5.0-alpha.0) (2025-08-10)
+
+
+### Bug Fixes
+
+* include credentials when fetching the manifests ([4e0ee79](https://github.com/navaris/appshell/commit/4e0ee79b4ba93d34fd6a0e1a5f6bf2fc9f3994cc))
+
+
+### Features
+
+* appshell cli api key support, init sync and outdated commands ([#6](https://github.com/navaris/appshell/issues/6)) ([acc5fa2](https://github.com/navaris/appshell/commit/acc5fa234f91a167038161d5080481c43f8eb8b4))
+
+
+
+
+
 # [0.4.0](https://github.com/navaris/appshell/compare/@appshell/loader@0.3.0...@appshell/loader@0.4.0) (2024-09-24)
 
 

@@ -96,6 +96,7 @@ describe('initialize-worker', () => {
         ok: true,
         json: jest.fn().mockResolvedValue({
           apiKey: 'test-api-key',
+          apiKeyHeader: 'test-api-key-header',
           proxyUrl: 'http://my-proxy-domain/proxy',
         }),
       });
@@ -106,6 +107,7 @@ describe('initialize-worker', () => {
       expect(global.fetch).toHaveBeenCalledWith('/service-worker-config');
       expect(config).toMatchObject({
         apiKey: 'test-api-key',
+        apiKeyHeader: 'test-api-key-header',
         proxyUrl: 'http://my-proxy-domain/proxy',
       });
     });
