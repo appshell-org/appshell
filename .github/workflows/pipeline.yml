@@ -11,6 +11,12 @@ on:
       - main
       - 'feat/**'
       - 'fix/**'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual run'
+        required: false
+        default: 'Manual trigger'
 
 permissions:
   contents: write
