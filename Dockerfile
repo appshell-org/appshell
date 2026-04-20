@@ -81,7 +81,7 @@ COPY --from=build /appshell/node_modules /appshell/node_modules
 
 COPY --from=build /appshell/packages/cli /appshell/packages/cli
 RUN npm install -g file:/appshell/packages/cli
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 
 ### DEVELOPMENT
