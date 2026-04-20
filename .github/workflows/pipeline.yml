@@ -149,6 +149,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           target: production
           platforms: linux/amd64, linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             SOURCE_DIR=packages/${{ matrix.package-dir }}
           tags: |
@@ -164,6 +166,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           target: developer
           platforms: linux/amd64, linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             SOURCE_DIR=packages/${{ matrix.package-dir }}
           tags: |
@@ -178,7 +182,9 @@ jobs:
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           target: production
-          platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             SOURCE_DIR=packages/${{ matrix.package-dir }}
           tags: |
@@ -192,7 +198,9 @@ jobs:
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           target: developer
-          platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             SOURCE_DIR=packages/${{ matrix.package-dir }}
           tags: |
